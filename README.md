@@ -30,15 +30,19 @@ If you want to know how origin trials work, please check (Google's documentation
 ### Options
 
 The following options can be used:
-
-* method: 'Badging' | 'Favicon' | 'Title'
-* favicon:
-  * width: the width of the bubble
-  * height: the height of the bubble
-  * fontFamily: the font family
-  * fontSize: the font size
-  * color: the font color
-  * background: the bubble's background color
+```js
+{
+  method: 'Badging' | 'Favicon' | 'Title'
+  favicon: {
+    fontSize: number,
+    fontFamily: string,
+    background: string,
+    color: string,
+    height: number,
+    width: number,
+  }
+}
+```
 
 And you can use it like this:
 ```js
@@ -49,10 +53,6 @@ badgin.set(1, {
   },
 })
 ```
-
-## Browser Support
-
-`badgin` works in all modern browsers.
 
 ## License / Credits
 
