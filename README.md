@@ -1,7 +1,8 @@
 # badgin
 
-badgin allows to set an badge to the webpage in the following order:
-- via (Badging API)[https://developers.google.com/web/updates/2018/12/badging-api]
+![](screenshot.png)
+
+The [Badging API](https://developers.google.com/web/updates/2018/12/badging-api) is a new web platform API that allows installed web apps to set an application-wide badge, shown in an operating-system-specific place associated with the application (such as the shelf or home screen). `badgin` allows to set an badge via Badging API  and falls back to these alternatives:
 - via Favicon
 - via title
 
@@ -25,7 +26,7 @@ badgin.clear()
 ```
 
 Starting in Chrome 73, the Badging API is available as an origin trial for Windows (7+) and macOS. 
-If you want to know how origin trials work, please check (Google's documentation)[https://developers.google.com/web/updates/2018/12/badging-api#use].
+If you want to know how origin trials work, please check [Google's documentation](https://developers.google.com/web/updates/2018/12/badging-api#use).
 
 ### Options
 
