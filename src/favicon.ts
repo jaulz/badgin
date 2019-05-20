@@ -1,4 +1,5 @@
 import { Value } from './index'
+import isEmpty from './isEmpty'
 
 export type Options = {
   fontSize: number
@@ -7,23 +8,44 @@ export type Options = {
   color: string
   height: number
   width: number
+  opacity: number
 }
 
 type Favicon = HTMLLinkElement | undefined
 
+// Store previous value
+let previousValue: Value = 0
+
+// Get the current favicon of the document
+const getFavicon = (): Favicon => {
+  const links = document.getElementsByTagName('link')
+
+  for (let i = 0; i < links.length; i++) {
+    const link = links[i]
+    if (
+      link.hasAttribute('href') &&
+      (link.getAttribute('rel') || '').match(/\bicon\b/)
+    ) {
+      return link
+    }
+  }
+
+  return undefined
+}
+
 // Calculate the size of the font and canvas element based on device's ratio
-var ratio = Math.ceil(window.devicePixelRatio) || 1,
-  size = 16 * ratio
+const ratio = Math.ceil(window.devicePixelRatio) || 1
+const size = 16 * ratio
 
 // References to the various of favicons that we need to track to reset and update the counters
-let original: Favicon = undefined,
-  current: Favicon = undefined,
-  image: HTMLImageElement = document.createElement('img')
+const original: Favicon = getFavicon()
+const image: HTMLImageElement = document.createElement('img')
 
 // Setup the source canvas element which we use to generate the favicon's data-url's from
 const canvas = document.createElement('canvas')
 canvas.width = size
 canvas.height = size
+const context = canvas.getContext ? canvas.getContext('2d') : null
 
 // Options
 export const defaultOptions: Options = {
@@ -33,29 +55,7 @@ export const defaultOptions: Options = {
   color: '#ffffff',
   height: 9,
   width: 7,
-}
-
-// A poor man's browser sniffer
-const isBrowser = (id: string) => {
-  return !!~navigator.userAgent.toLowerCase().indexOf(id)
-}
-
-// We unfortunately need to do some browser sniffing here as the difference in
-// render engines are affecting the size of rendered text.
-const isWebkit = isBrowser('chrome') || isBrowser('safari'),
-  isMozilla = isBrowser('mozilla') && !isWebkit
-
-// Get the current favicon of the document
-const getFavicon = (): Favicon => {
-  const links = document.getElementsByTagName('link')
-
-  for (let i = 0; i < links.length; i++) {
-    if ((links[i].getAttribute('rel') || '').match(/\bicon\b/)) {
-      return links[i]
-    }
-  }
-
-  return undefined
+  opacity: 1,
 }
 
 // Update the favicon
@@ -81,29 +81,15 @@ const setFavicon = (url: string) => {
 }
 
 // Draw the favicon
-const drawFavicon = (label: Value, options: Options) => {
-  if (!canvas.getContext) {
-    return false
-  }
-
-  // Remember original favicon
-  if (!original) {
-    original = getFavicon()
-  }
-
-  const context = canvas.getContext('2d')
+const drawFavicon = (value: Value, options: Options) => {
   image.onload = () => {
-    if (!context) {
-      return
-    }
-
     // Draw image in canvas
-    context.clearRect(0, 0, size, size)
-    context.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size)
+    context!.clearRect(0, 0, size, size)
+    context!.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size)
 
     // Draw bubble over the top
-    if (String(label).length > 0) {
-      drawBubble(context, label, options)
+    if (String(value).length > 0) {
+      drawBubble(context!, value, options)
     }
 
     // Refresh tag in page
@@ -122,21 +108,22 @@ const drawFavicon = (label: Value, options: Options) => {
 }
 
 // Draws the bubble on the canvas
-function drawBubble(
+const drawBubble = (
   context: CanvasRenderingContext2D,
   value: Value,
   options: Options
-) {
-  const length = String(value).length - 1,
-    width = options.width * ratio + 6 * ratio * length,
-    height = options.height * ratio,
-    top = size - height,
-    left = size - width - ratio,
-    bottom = 16 * ratio,
-    right = 16 * ratio,
-    radius = 2 * ratio
+) => {
+  const length = String(value).length - 1
+  const width = options.width * ratio + 6 * ratio * length
+  const height = options.height * ratio
+  const top = size - height
+  const left = size - width - ratio
+  const bottom = 16 * ratio
+  const right = 16 * ratio
+  const radius = 2 * ratio
 
-  // Webkit seems to render fonts lighter than FireFox
+  context.save()
+  context.globalAlpha = options.opacity
   context.font = `${options.fontSize}px ${options.fontFamily}`
   context.fillStyle = options.background
   context.strokeStyle = options.background
@@ -155,19 +142,122 @@ function drawBubble(
   context.closePath()
   context.fill()
 
-  // Label
+  // Value
   context.fillStyle = options.color
   context.textAlign = 'right'
   context.textBaseline = 'top'
   context.fillText(String(value), ratio === 2 ? 29 : 15, 7 * ratio)
+
+  context.restore()
+}
+
+// Animate the drawing
+const animateFavicon = async (value: Value, options: Options) => {
+  const shouldAnimate = () => !document.hidden
+  if (!shouldAnimate()) {
+    drawFavicon(value, options)
+    return
+  }
+
+  // Fade animation
+  const frames = [
+    {
+      opacity: 0.0,
+    },
+    {
+      opacity: 0.1,
+    },
+    {
+      opacity: 0.2,
+    },
+    {
+      opacity: 0.3,
+    },
+    {
+      opacity: 0.4,
+    },
+    {
+      opacity: 0.5,
+    },
+    {
+      opacity: 0.6,
+    },
+    {
+      opacity: 0.7,
+    },
+    {
+      opacity: 0.8,
+    },
+    {
+      opacity: 0.9,
+    },
+    {
+      opacity: 1.0,
+    },
+  ]
+
+  try {
+    // Fade out previous value
+    if (previousValue) {
+      // Remember previous value
+      const localPreviousValue = previousValue
+      previousValue = value
+
+      await [...frames].reverse().reduce(async (cumulatedAnimation, frame) => {
+        await cumulatedAnimation
+
+        // Stop immediately if tab is not active anymore
+        if (!shouldAnimate()) {
+          throw new Error()
+        }
+
+        return new Promise(resolve => {
+          drawFavicon(localPreviousValue, {
+            ...options,
+            ...frame,
+          })
+          setTimeout(() => resolve(), 50)
+        })
+      }, Promise.resolve({}))
+    }
+
+    // Fade in new value
+    if (value) {
+      await frames.reduce(async (cumulatedAnimation, frame) => {
+        await cumulatedAnimation
+
+        // Stop immediately if tab is not active anymore
+        if (!shouldAnimate()) {
+          throw new Error()
+        }
+
+        return new Promise(resolve => {
+          drawFavicon(value, {
+            ...options,
+            ...frame,
+          })
+          setTimeout(() => resolve(), 50)
+        })
+      }, Promise.resolve({}))
+    }
+  } catch (error) {
+    // Draw immediately if any error occurs
+    if (!isEmpty(value)) {
+      drawFavicon(value, options)
+    } else {
+      setFavicon(original!.href)
+    }
+  }
+}
+
+export function isAvailable() {
+  return !!context && !!original
 }
 
 export function set(value: Value, options: Options) {
-  drawFavicon(value, options)
+  animateFavicon(value, options)
 }
 
-export function clear() {
-  if (original) {
-    setFavicon(original.href)
-  }
+export function clear(options: Options) {
+  animateFavicon(0, options)
 }

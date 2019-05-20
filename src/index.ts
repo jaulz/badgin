@@ -1,6 +1,8 @@
+import merge from 'lodash.merge'
 import * as badging from './badging'
 import * as favicon from './favicon'
 import * as title from './title'
+import isEmpty from './isEmpty'
 
 export type Value = number | null
 
@@ -17,7 +19,11 @@ export interface Options {
 }
 
 const defaultOptions: Options = {
-  method: 'ExperimentalBadge' in window ? 'Badging' : 'Favicon',
+  method: badging.isAvailable()
+    ? 'Badging'
+    : favicon.isAvailable()
+    ? 'Favicon'
+    : 'Title',
   favicon: favicon.defaultOptions,
 }
 
@@ -25,29 +31,21 @@ const defaultOptions: Options = {
  * Sets badge
  */
 export function set(value: Value, options: Options = defaultOptions) {
-  if (!value || !Number.parseInt(value as any) || value < 0) {
-    clear()
+  const mergedOptions = merge({}, defaultOptions, options)
+
+  if (isEmpty(value)) {
+    clear(mergedOptions)
     return
   }
 
-  // Merge options
-  const webOptions = {
-    ...defaultOptions,
-    ...options,
-  }
-
-  // Set badge
-  switch (webOptions.method) {
+  switch (mergedOptions.method) {
     case 'Badging': {
       badging.set(value)
       return
     }
 
     case 'Favicon': {
-      favicon.set(value, {
-        ...defaultOptions.favicon,
-        ...webOptions.favicon,
-      })
+      favicon.set(value, mergedOptions.favicon)
       return
     }
 
@@ -61,21 +59,15 @@ export function set(value: Value, options: Options = defaultOptions) {
  * Clears badge
  */
 export function clear(options: Options = defaultOptions) {
-  // Merge options
-  const webOptions = {
-    ...defaultOptions,
-    ...options,
-  }
-
-  // Clear badge
-  switch (webOptions.method) {
+  const mergedOptions = merge({}, defaultOptions, options)
+  switch (mergedOptions.method) {
     case 'Badging': {
       badging.clear()
       return
     }
 
     case 'Favicon': {
-      favicon.clear()
+      favicon.clear(mergedOptions.favicon)
       return
     }
 
