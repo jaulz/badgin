@@ -16,13 +16,11 @@ module.exports = {
       },
 
       watch: {
-        description:
-          'build the project and watch source folder',
+        description: 'build the project and watch source folder',
         script: concurrent({
           http: 'ws',
-          transpile: 'rollup -cw'
-        }
-        )
+          transpile: 'rollup -cw',
+        }),
       },
     },
   },

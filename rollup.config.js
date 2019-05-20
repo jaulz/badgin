@@ -1,5 +1,5 @@
 import typescript from 'rollup-plugin-typescript2'
-import {terser} from "rollup-plugin-terser";
+import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 
 export default {
@@ -14,19 +14,19 @@ export default {
       format: 'es',
     },
     {
-     file: pkg.browser,
-     format: 'iife',
-     name: 'badgin'
-    }
+      file: pkg.browser,
+      format: 'iife',
+      name: 'badgin',
+    },
   ],
   external: [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
   ],
-plugins: [
+  plugins: [
     typescript({
       typescript: require('typescript'),
     }),
-    terser()
+    terser(),
   ],
 }
