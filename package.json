@@ -1,0 +1,51 @@
+{
+  "name": "badgin",
+  "version": "1.0.0",
+  "description": "Badgin makes it easy to subtly notify the user that there is some new activity that might require their attention, or it can be used to indicate a small amount of information, such as an unread count.",
+  "author": "Julian Hundeloh",
+  "main": "build/index.js",
+  "module": "build/index.es.js",
+  "browser": "build/index.iife.js",
+  "files": [
+    "build"
+  ],
+  "types": "build/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "nps",
+    "test": "nps test"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^2.3.0",
+    "local-web-server": "^2.6.1",
+    "prettier": "^1.17.1",
+    "pretty-quick": "^1.10.0",
+    "rollup": "^1.12.3",
+    "rollup-plugin-terser": "^4.0.4",
+    "rollup-plugin-typescript2": "^0.21.1",
+    "semantic-release": "^15.13.12",
+    "typescript": "^3.4.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "semi": false
+  },
+  "husky": {
+    "hooks": {
+      "post-merge": "yarn install",
+      "post-rewrite": "yarn install",
+      "pre-commit": "pretty-quick --staged --verbose"
+    }
+  },
+  "dependencies": {
+    "nps": "^5.9.5",
+    "nps-utils": "^1.7.0"
+  }
+}

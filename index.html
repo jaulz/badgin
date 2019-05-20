@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="icon" href="favicon.ico">
+		<title>Badgin</title>
+		<meta http-equiv="origin-trial" content="Alc7jyT/ogUiKGdlvEdXQx+CLftWbssZOvBg7ZK+y5t3BmOIMs1ejL1n4GQRLhAzNpgyHez50jA1X6FrRjl95gsAAABQeyJvcmlnaW4iOiJodHRwczovL2phdWx6LmdpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiQmFkZ2luZyIsImV4cGlyeSI6MTU2MTk4ODQ2MX0=">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" />
+		<script src="./../build/index.iife.js"></script>
+		<script>
+			let value = 0
+			const options = {
+				favicon: {
+					background: '#424242',
+					color: 'rgba(255, 255, 255)',
+				},
+			}
+			
+			function setMethod(method) {
+				options.method = method
+			}
+
+			function increaseBadge() {
+				value++
+				badgin.set(value, options)
+			}
+			
+			function decreaseBadge() {
+				value--
+				badgin.set(value, options)
+			}
+			
+			function clearBadge() {
+				badgin.clear(options)
+			}
+
+			// Set initial value
+			badgin.set(value, options)
+		</script>
+  </head>
+  <body>  
+		
+		<section class="section">
+			<div class="container">
+					<h1 class="title">badgin</h1>
+				<h2 class="title">Method</h2>
+    <input type="radio" id="method_automatically" name="method" value="" onchange="setMethod();" class="radio" checked>
+    <label for="method_automatically">Automatically</label> 
+    <input type="radio" id="method_badging" name="method" value="Badging" onchange="setMethod('Badging');" class="radio">
+    <label for="method_badging">Badging API</label>
+    <input type="radio" id="method_favicon" name="method" value="Favicon" onchange="setMethod('Favicon');" class="radio">
+    <label for="method_favicon">Favicon</label> 
+    <input type="radio" id="method_title" name="method" value="Title" onchange="setMethod('Title');" class="radio">
+		<label for="method_title">Title</label> 
+		</div>
+	</section>
+
+		<section class="section">
+				<div class="container">
+					<h2 class="title">Change value</h2>
+    <button onclick="increaseBadge();" class="button">Increase</button>
+    <button onclick="decreaseBadge();" class="button">Decrease</button>
+    <button onclick="clearBadge();" class="button">Clear</button>
+		</div>
+	</section>
+  </body>
+</html>
