@@ -44,7 +44,7 @@
       "post-merge": "yarn install",
       "post-rewrite": "yarn install",
       "pre-commit": "pretty-quick --staged --verbose",
-      "post-commit": "yarn start build && git add build/ && git commit -m 'chore: rebuilt artifacts' --no-verify"
+      "post-commit": "yarn start build && git add build/ && git commit -m \"chore: rebuilt artifacts\" --no-verify"
     }
   },
   "dependencies": {
