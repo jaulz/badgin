@@ -43,7 +43,7 @@
     "hooks": {
       "post-merge": "yarn install",
       "post-rewrite": "yarn install",
-      "pre-commit": "pretty-quick --staged --verbose && yarn start build && git add -A && git commit --amend -C HEAD --no-verify"
+      "pre-commit": "pretty-quick --staged --verbose && yarn start build && git add build/ && git commit --amend -C HEAD --no-verify"
     }
   },
   "dependencies": {
