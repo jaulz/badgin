@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="icon" href="./favicon.ico" />
+    <link rel="icon" href="./assets/favicon.ico" />
     <title>badgin Demo</title>
     <meta
       http-equiv="origin-trial"
       content="Aj1FJCSnnsnMSEaSBA/84AhqsN5AFimqCAIaTtZlHiE2kekbpU+MnfpxMY2l1yfEhHcWOf5mXrUQTlcsXF8lVA0AAABaeyJvcmlnaW4iOiJodHRwczovL2FwcHJvdmFscy1jbG91ZC5naXRodWIuaW86NDQzIiwiZmVhdHVyZSI6IkJhZGdpbmciLCJleHBpcnkiOjE1NjIwNzQ3Nzl9"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.json" />
+    <link rel="manifest" href="./assets/manifest.json" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"
@@ -72,7 +72,7 @@
 
       // Add service worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').then(() => {
+        navigator.serviceWorker.register('./assets/sw.js').then(() => {
           console.log('Service Worker Registered')
         })
       }
