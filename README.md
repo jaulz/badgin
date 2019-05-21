@@ -1,6 +1,6 @@
 # badgin
 
-![](assets/screenshot.png)
+![](assets/screenshot_browser.png) ![](assets/screenshot_standalone.png)
 
 The [Badging API](https://developers.google.com/web/updates/2018/12/badging-api) is a new web platform API that allows installed web apps to set an application-wide badge, shown in an operating-system-specific place associated with the application (such as the shelf or home screen). `badgin` allows to set an badge via Badging API and falls back to these alternatives:
 
