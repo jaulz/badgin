@@ -18,7 +18,7 @@ module.exports = {
       watch: {
         description: 'build the project and watch source folder',
         script: concurrent({
-          http: 'live-server --no-browser',
+          http: 'live-server',
           transpile: 'rollup -cw',
         }),
       },
