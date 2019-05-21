@@ -1,8 +1,9 @@
 # badgin
 
-![](screenshot.png)
+![](assets/screenshot.png)
 
-The [Badging API](https://developers.google.com/web/updates/2018/12/badging-api) is a new web platform API that allows installed web apps to set an application-wide badge, shown in an operating-system-specific place associated with the application (such as the shelf or home screen). `badgin` allows to set an badge via Badging API  and falls back to these alternatives:
+The [Badging API](https://developers.google.com/web/updates/2018/12/badging-api) is a new web platform API that allows installed web apps to set an application-wide badge, shown in an operating-system-specific place associated with the application (such as the shelf or home screen). `badgin` allows to set an badge via Badging API and falls back to these alternatives:
+
 - via Favicon
 - via title
 
@@ -25,12 +26,13 @@ badgin.set(1)
 badgin.clear()
 ```
 
-Starting in Chrome 73, the Badging API is available as an origin trial for Windows (7+) and macOS. 
+Starting in Chrome 73, the Badging API is available as an origin trial for Windows (7+) and macOS.
 If you want to know how origin trials work, please check [Google's documentation](https://developers.google.com/web/updates/2018/12/badging-api#use).
 
 ### Options
 
 The following options can be used:
+
 ```js
 {
   method: 'Badging' | 'Favicon' | 'Title'
@@ -46,6 +48,7 @@ The following options can be used:
 ```
 
 And you can use it like this:
+
 ```js
 badgin.set(1, {
   favicon: {

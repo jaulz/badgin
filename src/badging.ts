@@ -6,8 +6,12 @@ const warn = () => {
   )
 }
 
+export function isAvailable() {
+  return 'ExperimentalBadge' in window
+}
+
 export function set(value: Value) {
-  if (!('ExperimentalBadge' in window)) {
+  if (!isAvailable()) {
     warn()
     return
   }
@@ -16,7 +20,7 @@ export function set(value: Value) {
 }
 
 export function clear() {
-  if (!('ExperimentalBadge' in window)) {
+  if (!isAvailable()) {
     warn()
     return
   }

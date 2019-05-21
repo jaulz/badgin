@@ -2,7 +2,7 @@
   "name": "badgin",
   "version": "1.0.0",
   "description": "Badgin makes it easy to subtly notify the user that there is some new activity that might require their attention, or it can be used to indicate a small amount of information, such as an unread count.",
-  "author": "Julian Hundeloh",
+  "author": "",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "browser": "build/index.iife.js",
@@ -16,12 +16,15 @@
     "test": "nps test"
   },
   "devDependencies": {
+    "@types/lodash.merge": "^4.6.6",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^2.3.0",
-    "local-web-server": "^2.6.1",
+    "live-server": "^1.2.1",
     "prettier": "^1.17.1",
     "pretty-quick": "^1.10.0",
     "rollup": "^1.12.3",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-typescript2": "^0.21.1",
     "typescript": "^3.4.5"
@@ -40,10 +43,12 @@
     "hooks": {
       "post-merge": "yarn install",
       "post-rewrite": "yarn install",
-      "pre-commit": "pretty-quick --staged --verbose"
+      "pre-commit": "pretty-quick --staged --verbose",
+      "post-commit": "yarn start build && git add build/ && git commit -m 'chore: rebuilt artifacts' --no-verify"
     }
   },
   "dependencies": {
+    "lodash.merge": "^4.6.1",
     "nps": "^5.9.5",
     "nps-utils": "^1.7.0"
   }
