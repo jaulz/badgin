@@ -2,17 +2,17 @@
 <html>
   <head>
     <link rel="icon" href="favicon.ico" />
-    <title>Badgin</title>
+    <title>badgin Demo</title>
     <meta
       http-equiv="origin-trial"
-      content="Alc7jyT/ogUiKGdlvEdXQx+CLftWbssZOvBg7ZK+y5t3BmOIMs1ejL1n4GQRLhAzNpgyHez50jA1X6FrRjl95gsAAABQeyJvcmlnaW4iOiJodHRwczovL2phdWx6LmdpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiQmFkZ2luZyIsImV4cGlyeSI6MTU2MTk4ODQ2MX0="
+      content="Aj1FJCSnnsnMSEaSBA/84AhqsN5AFimqCAIaTtZlHiE2kekbpU+MnfpxMY2l1yfEhHcWOf5mXrUQTlcsXF8lVA0AAABaeyJvcmlnaW4iOiJodHRwczovL2FwcHJvdmFscy1jbG91ZC5naXRodWIuaW86NDQzIiwiZmVhdHVyZSI6IkJhZGdpbmciLCJleHBpcnkiOjE1NjIwNzQ3Nzl9"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"
     />
-    <script src="./../build/index.iife.js"></script>
+    <script src="./build/index.iife.js"></script>
     <script>
       let value = 0
       const options = {
@@ -42,7 +42,45 @@
 
       // Set initial value
       badgin.set(value, options)
+
+      // Add to Home Screen
+      let deferredPrompt
+      const btnAdd = document.getElementById('butInstall')
+      const divInstallStatus = document.getElementById('installAvailable')
+
+      function install() {
+        if (!deferredPrompt) {
+          alert('It seems that you cannot install Progress Web Apps.')
+          return
+        }
+
+        // Show the prompt
+        deferredPrompt.prompt()
+
+        // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice.then(resp => {
+          console.log(JSON.stringify(resp))
+        })
+      }
+
+      window.addEventListener('beforeinstallprompt', e => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault()
+
+        // Stash the event so it can be triggered later
+        deferredPrompt = e
+
+        // Update UI notify the user they can add to home screen
+        btnAdd.removeAttribute('disabled')
+      })
     </script>
+    <style>
+      @media (display-mode: standalone) {
+        #requiresStandalone {
+          display: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <section class="section">
@@ -70,7 +108,18 @@
           class="radio"
         />
         <label for="method_badging">Badging API</label>
-        <br />
+        <div>
+          <article class="message is-warning" id="requiresStandalone">
+            <div class="message-body">
+              This demo must be run as an installed Progressive Web App, and
+              it's must be opened/running as a <b>standalone</b> window.
+              <br />
+              <button type="button" onclick="install();" class="button">
+                Install
+              </button>
+            </div>
+          </article>
+        </div>
 
         <input
           type="radio"

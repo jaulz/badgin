@@ -43,8 +43,7 @@
     "hooks": {
       "post-merge": "yarn install",
       "post-rewrite": "yarn install",
-      "pre-commit": "git reset HEAD build/ && pretty-quick --staged --verbose",
-      "post-commit": "yarn start build && git add build/ && git commit -m \"chore: rebuilt artifacts\" --no-verify"
+      "pre-commit": "git reset HEAD build/ && pretty-quick --staged --verbose"
     }
   },
   "dependencies": {
