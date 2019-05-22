@@ -15,7 +15,7 @@ The [Badging API](https://developers.google.com/web/updates/2018/12/badging-api)
 The module can be installed by running:
 
 ```
-yarn add --save badgin
+yarn add --save @approvals-cloud/badgin
 ```
 
 ## Usage
