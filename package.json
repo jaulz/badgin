@@ -27,7 +27,9 @@
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-typescript2": "^0.21.1",
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5",
+    "nps": "^5.9.5",
+    "nps-utils": "^1.7.0"
   },
   "config": {
     "commitizen": {
@@ -47,8 +49,6 @@
     }
   },
   "dependencies": {
-    "lodash.merge": "^4.6.1",
-    "nps": "^5.9.5",
-    "nps-utils": "^1.7.0"
+    "lodash.merge": "^4.6.1"
   }
 }
