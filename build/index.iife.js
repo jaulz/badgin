@@ -748,7 +748,7 @@ var badgin = (function(t) {
     title: m,
   })
   return (
-    (t.clear = function(t = j()) {
+    (t.clear = function() {
       i() ? window.ExperimentalBadge.clear() : o(),
         _(s.href),
         (document.title = g)

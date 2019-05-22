@@ -210,7 +210,7 @@ function set$3(value, options = getDefaultOptions()) {
 /**
  * Clears badge
  */
-function clear$3(options = getDefaultOptions()) {
+function clear$3() {
   clear()
   clear$1()
   clear$2()
