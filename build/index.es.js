@@ -51,19 +51,27 @@ const getFavicon = () => {
       return link
     }
   }
-  return undefined
+  return null
 }
 // Calculate the size of the font and canvas element based on device's ratio
 const ratio = Math.ceil(window.devicePixelRatio) || 1
 const size = 16 * ratio
 // References to the various of favicons that we need to track to reset and update the counters
-const original = getFavicon()
-const image = document.createElement('img')
+let original = null
+let image = null
 // Setup the source canvas element which we use to generate the favicon's data-url's from
-const canvas = document.createElement('canvas')
-canvas.width = size
-canvas.height = size
-const context = canvas.getContext ? canvas.getContext('2d') : null
+let canvas = null
+let context = null
+// Initialize
+let initialize = () => {
+  original = getFavicon()
+  image = document.createElement('img')
+  canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  context = canvas.getContext ? canvas.getContext('2d') : null
+  initialize = () => {}
+}
 // Options
 const defaultOptions = {
   fontSize: 8 * ratio,
@@ -94,7 +102,13 @@ const setFavicon = url => {
 }
 // Draw the favicon
 const drawFavicon = (value, options) => {
+  if (!image) {
+    return
+  }
   image.onload = () => {
+    if (!image || !canvas) {
+      return
+    }
     // Draw image in canvas
     context.clearRect(0, 0, size, size)
     context.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size)
@@ -158,6 +172,7 @@ const drawBubble = (context, value, options) => {
   context.restore()
 }
 function isAvailable$1() {
+  initialize()
   return !!context && !!original
 }
 function set$1(value, options) {
@@ -167,11 +182,14 @@ function clear$1() {
   setFavicon(original.href)
 }
 
-const original$1 = document.title
+let original$1 = ''
 const defaultOptions$1 = {
   indicator: '!',
 }
 function set$2(value, options) {
+  if (!original$1) {
+    original$1 = document.title
+  }
   if (isIndicator(value)) {
     document.title = `(${options.indicator}) ${original$1}`
     return
