@@ -12,7 +12,7 @@ export type Options = {
   opacity: number
 }
 
-type Favicon = HTMLLinkElement | undefined
+type Favicon = HTMLLinkElement | null
 
 // Get the current favicon of the document
 const getFavicon = (): Favicon => {
@@ -28,7 +28,7 @@ const getFavicon = (): Favicon => {
     }
   }
 
-  return undefined
+  return null
 }
 
 // Calculate the size of the font and canvas element based on device's ratio
@@ -36,14 +36,24 @@ const ratio = Math.ceil(window.devicePixelRatio) || 1
 const size = 16 * ratio
 
 // References to the various of favicons that we need to track to reset and update the counters
-const original: Favicon = getFavicon()
-const image: HTMLImageElement = document.createElement('img')
+let original: Favicon = null
+let image: HTMLImageElement | null = null
 
 // Setup the source canvas element which we use to generate the favicon's data-url's from
-const canvas = document.createElement('canvas')
-canvas.width = size
-canvas.height = size
-const context = canvas.getContext ? canvas.getContext('2d') : null
+let canvas: HTMLCanvasElement | null = null
+let context: CanvasRenderingContext2D | null = null
+
+// Initialize
+let initialize = () => {
+  original = getFavicon()
+  image = document.createElement('img')
+  canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  context = canvas.getContext ? canvas.getContext('2d') : null
+
+  initialize = () => {}
+}
 
 // Options
 export const defaultOptions: Options = {
@@ -80,7 +90,15 @@ const setFavicon = (url: string) => {
 
 // Draw the favicon
 const drawFavicon = (value: Value, options: Options) => {
+  if (!image) {
+    return
+  }
+
   image.onload = () => {
+    if (!image || !canvas) {
+      return
+    }
+
     // Draw image in canvas
     context!.clearRect(0, 0, size, size)
     context!.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size)
@@ -159,6 +177,7 @@ const drawBubble = (
 }
 
 export function isAvailable() {
+  initialize()
   return !!context && !!original
 }
 

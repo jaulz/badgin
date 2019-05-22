@@ -2,7 +2,7 @@ import { Value } from './index'
 import isIndicator from './isIndicator'
 import isPositiveNumber from './isPositiveNumber'
 
-const original = document.title
+let original = ''
 
 export type Options = {
   indicator: string
@@ -13,6 +13,10 @@ export const defaultOptions: Options = {
 }
 
 export function set(value: Value, options: Options) {
+  if (!original) {
+    original = document.title
+  }
+
   if (isIndicator(value)) {
     document.title = `(${options.indicator}) ${original}`
     return

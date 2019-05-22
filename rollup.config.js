@@ -9,7 +9,7 @@ export default [
   {
     input: 'src/index.ts',
     output: {
-      file: pkg.browser,
+      file: 'build/index.iife.js',
       format: 'iife',
       name: 'badgin',
     },
