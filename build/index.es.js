@@ -68,7 +68,7 @@ const context = canvas.getContext ? canvas.getContext('2d') : null
 const defaultOptions = {
   fontSize: 8 * ratio,
   fontFamily: 'Arial',
-  background: '#F03D25',
+  background: '#424242',
   color: '#ffffff',
   height: 8,
   width: 7,
