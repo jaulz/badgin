@@ -115,7 +115,7 @@ const drawBubble = (context, value, options) => {
     : isPositiveNumber(value)
     ? String(value)
     : null
-  if (!finalValue) {
+  if (finalValue === null) {
     return
   }
   // Calculate position etc.

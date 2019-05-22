@@ -115,7 +115,7 @@ const drawBubble = (
     : isPositiveNumber(value)
     ? String(value)
     : null
-  if (!finalValue) {
+  if (finalValue === null) {
     return
   }
 

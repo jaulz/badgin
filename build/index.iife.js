@@ -708,7 +708,7 @@ var badgin = (function(t) {
     },
     b = (t, e, n) => {
       const r = c(e) ? ' ' : a(e) ? String(e) : null
-      if (!r) return
+      if (null === r) return
       const o = r.length - 1,
         i = n.width * l + 4 * l * o,
         u = n.height * l,
