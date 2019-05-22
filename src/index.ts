@@ -3,6 +3,14 @@ import * as badging from './badging'
 import * as favicon from './favicon'
 import * as title from './title'
 
+type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends Array<infer U>
+    ? Array<DeepPartial<U>>
+    : T[P] extends ReadonlyArray<infer U>
+    ? ReadonlyArray<DeepPartial<U>>
+    : DeepPartial<T[P]>
+}
+
 export type Value = number | null | undefined
 
 export interface Interface {
@@ -33,7 +41,10 @@ const getDefaultOptions = (): Options => {
 /**
  * Sets badge
  */
-export function set(value: Value, options: Options = getDefaultOptions()) {
+export function set(
+  value: Value,
+  options: DeepPartial<Options> = getDefaultOptions()
+) {
   const mergedOptions = merge({}, getDefaultOptions(), options)
 
   switch (mergedOptions.method) {
@@ -56,7 +67,7 @@ export function set(value: Value, options: Options = getDefaultOptions()) {
 /**
  * Clears badge
  */
-export function clear(options: Options = getDefaultOptions()) {
+export function clear() {
   badging.clear()
   favicon.clear()
   title.clear()
