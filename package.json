@@ -1,5 +1,5 @@
 {
-  "name": "badgin",
+  "name": "@approvals-cloud/badgin",
   "version": "1.0.0",
   "description": "Badgin makes it easy to subtly notify the user that there is some new activity that might require their attention, or it can be used to indicate a small amount of information, such as an unread count.",
   "author": "",
