@@ -13,7 +13,7 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-		"prepublishOnly": "yarn start build"
+    "prepublishOnly": "yarn start build"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
