@@ -30,7 +30,6 @@ export function set(value: Value) {
 
 export function clear() {
   if (!isAvailable()) {
-    warn()
     return
   }
 
