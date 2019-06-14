@@ -44,15 +44,17 @@ let canvas: HTMLCanvasElement | null = null
 let context: CanvasRenderingContext2D | null = null
 
 // Initialize
-let initialize = () => {
+const initialize = () => {
+  if (original) {
+    return
+  }
+
   original = getFavicon()
   image = document.createElement('img')
   canvas = document.createElement('canvas')
   canvas.width = size
   canvas.height = size
   context = canvas.getContext ? canvas.getContext('2d') : null
-
-  initialize = () => {}
 }
 
 // Options
@@ -177,14 +179,30 @@ const drawBubble = (
 }
 
 export function isAvailable() {
-  initialize()
+  if (!original) {
+    original = getFavicon()
+    image = document.createElement('img')
+    canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    context = canvas.getContext ? canvas.getContext('2d') : null
+  }
+
   return !!context && !!original
 }
 
 export function set(value: Value, options: Options) {
+  if (!isAvailable()) {
+    return
+  }
+
   drawFavicon(value, options)
 }
 
 export function clear() {
+  if (!isAvailable()) {
+    return
+  }
+
   setFavicon(original!.href)
 }
