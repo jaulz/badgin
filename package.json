@@ -12,7 +12,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nps",
-    "test": "nps test"
+    "test": "nps test",
+    "prepublishOnly": "yarn start build"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
