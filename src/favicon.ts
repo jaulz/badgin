@@ -1,3 +1,4 @@
+import merge from 'lodash.merge'
 import { Value } from './index'
 import isPositiveNumber from './isPositiveNumber'
 import isIndicator from './isIndicator'
@@ -35,28 +36,6 @@ const getFavicon = (): Favicon => {
 const ratio = Math.ceil(window.devicePixelRatio) || 1
 const size = 16 * ratio
 
-// References to the various of favicons that we need to track to reset and update the counters
-let original: Favicon = null
-let image: HTMLImageElement | null = null
-
-// Setup the source canvas element which we use to generate the favicon's data-url's from
-let canvas: HTMLCanvasElement | null = null
-let context: CanvasRenderingContext2D | null = null
-
-// Initialize
-const initialize = () => {
-  if (original) {
-    return
-  }
-
-  original = getFavicon()
-  image = document.createElement('img')
-  canvas = document.createElement('canvas')
-  canvas.width = size
-  canvas.height = size
-  context = canvas.getContext ? canvas.getContext('2d') : null
-}
-
 // Options
 export const defaultOptions: Options = {
   fontSize: 8 * ratio,
@@ -66,6 +45,33 @@ export const defaultOptions: Options = {
   height: 8,
   width: 7,
   opacity: 1,
+}
+
+// References to the various of favicons that we need to track to reset and update the counters
+const current = {
+  favicon: null,
+  value: null,
+  options: defaultOptions,
+}
+let original: Favicon = null
+let image: HTMLImageElement | null = null
+
+// Setup the source canvas element which we use to generate the favicon's data-url's from
+let canvas: HTMLCanvasElement | null = null
+let context: CanvasRenderingContext2D | null = null
+
+// Initialize
+const initialize = () => {
+  if (current.favicon) {
+    return
+  }
+
+  current.favicon = getFavicon()
+  image = document.createElement('img')
+  canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  context = canvas.getContext ? canvas.getContext('2d') : null
 }
 
 // Update the favicon
@@ -191,11 +197,15 @@ export function isAvailable() {
   return !!context && !!original
 }
 
-export function set(value: Value, options: Options) {
+export function set(value: Value, options: Partial<Options>) {
   if (!isAvailable()) {
     return
   }
 
+  // Remember options
+  merge(current.options, options)
+
+  // Draw icon
   drawFavicon(value, options)
 }
 

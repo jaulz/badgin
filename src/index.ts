@@ -1,15 +1,6 @@
-import merge from 'lodash.merge'
 import * as badging from './badging'
 import * as favicon from './favicon'
 import * as title from './title'
-
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
-    ? Array<DeepPartial<U>>
-    : T[P] extends ReadonlyArray<infer U>
-    ? ReadonlyArray<DeepPartial<U>>
-    : DeepPartial<T[P]>
-}
 
 export type Value = number | null | undefined
 
@@ -22,8 +13,8 @@ export type Method = 'Badging' | 'Favicon' | 'Title'
 
 export interface Options {
   method: Method
-  favicon: favicon.Options
-  title: title.Options
+  favicon: Partial<favicon.Options>
+  title: Partial<title.Options>
 }
 
 const getDefaultOptions = (): Options => {
@@ -41,25 +32,27 @@ const getDefaultOptions = (): Options => {
 /**
  * Sets badge
  */
-export function set(
-  value: Value,
-  options: DeepPartial<Options> = getDefaultOptions()
-) {
-  const mergedOptions = merge({}, getDefaultOptions(), options)
+export function set(value: Value, options?: Partial<Options>) {
+  const method =
+    options.method || badging.isAvailable()
+      ? 'Badging'
+      : favicon.isAvailable()
+      ? 'Favicon'
+      : 'Title'
 
-  switch (mergedOptions.method) {
+  switch (method) {
     case 'Badging': {
       badging.set(value)
       return
     }
 
     case 'Favicon': {
-      favicon.set(value, mergedOptions.favicon)
+      favicon.set(value, options.favicon)
       return
     }
 
     default: {
-      title.set(value, mergedOptions.title)
+      title.set(value, options.title)
     }
   }
 }
