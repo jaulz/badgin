@@ -67,13 +67,8 @@ const ratio = Math.ceil(window.devicePixelRatio) || 1
 const size = 16 * ratio
 // Options
 const defaultOptions = {
-  fontSize: 8 * ratio,
-  fontFamily: 'Arial',
-  background: '#424242',
+  backgroundColor: '#424242',
   color: '#ffffff',
-  height: 8,
-  width: 7,
-  opacity: 1,
   indicator: '!',
 }
 // References to the favicons that we need to track in order to reset and update the counters
@@ -149,8 +144,8 @@ const drawBubble = (context, value, options) => {
   }
   // Calculate position etc.
   const length = finalValue.length - 1
-  const width = options.width * ratio + 4 * ratio * length
-  const height = options.height * ratio
+  const width = 8 * ratio + 4 * ratio * length
+  const height = 7 * ratio
   const top = size - height
   const left = size - width - ratio
   const bottom = 16 * ratio
@@ -159,9 +154,9 @@ const drawBubble = (context, value, options) => {
   const center = left + width / 2 + 1
   // Bubble
   context.save()
-  context.globalAlpha = options.opacity
-  context.fillStyle = options.background
-  context.strokeStyle = options.background
+  context.globalAlpha = 1
+  context.fillStyle = options.backgroundColor
+  context.strokeStyle = options.backgroundColor
   context.lineWidth = ratio
   context.beginPath()
   context.moveTo(left + radius, top)
@@ -177,7 +172,7 @@ const drawBubble = (context, value, options) => {
   context.restore()
   // Value
   context.save()
-  context.font = `${options.fontSize}px ${options.fontFamily}`
+  context.font = `${8 * ratio}px Arial`
   context.fillStyle = options.color
   context.textAlign = 'center'
   context.textBaseline = 'top'

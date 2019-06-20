@@ -38,12 +38,9 @@ The following options can be used:
 {
   method: 'Badging' | 'Favicon' | 'Title'
   favicon: {
-    fontSize: number,
-    fontFamily: string,
-    background: string,
-    color: string,
-    height: number,
-    width: number,
+    backgroundColor: string
+    color: string
+    indicator: string
   }
   title: {
     indicator: string

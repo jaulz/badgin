@@ -74,33 +74,33 @@ var badgin = (function(t) {
         w = e && !e.nodeType && e,
         A = w && t && !t.nodeType && t,
         O = A && A.exports === w,
-        z = O && g.process,
-        x = (function() {
+        x = O && g.process,
+        z = (function() {
           try {
-            return z && z.binding && z.binding('util')
+            return x && x.binding && x.binding('util')
           } catch (t) {}
         })(),
-        T = x && x.isTypedArray
+        T = z && z.isTypedArray
       function S(t, e) {
         return '__proto__' == e ? void 0 : t[e]
       }
       var k,
         B,
-        E,
-        $ = Array.prototype,
+        C,
+        E = Array.prototype,
         P = Function.prototype,
-        C = Object.prototype,
-        F = j['__core-js_shared__'],
-        I = P.toString,
-        N = C.hasOwnProperty,
-        U = (k = /[^.]+$/.exec((F && F.keys && F.keys.IE_PROTO) || ''))
+        $ = Object.prototype,
+        I = j['__core-js_shared__'],
+        N = P.toString,
+        F = $.hasOwnProperty,
+        U = (k = /[^.]+$/.exec((I && I.keys && I.keys.IE_PROTO) || ''))
           ? 'Symbol(src)_1.' + k
           : '',
-        M = C.toString,
-        R = I.call(Object),
+        M = $.toString,
+        R = N.call(Object),
         q = RegExp(
           '^' +
-            I.call(N)
+            N.call(F)
               .replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
               .replace(
                 /hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,
@@ -113,13 +113,13 @@ var badgin = (function(t) {
         L = j.Uint8Array,
         V = Q ? Q.allocUnsafe : void 0,
         W = ((B = Object.getPrototypeOf),
-        (E = Object),
+        (C = Object),
         function(t) {
-          return B(E(t))
+          return B(C(t))
         }),
         G = Object.create,
-        H = C.propertyIsEnumerable,
-        J = $.splice,
+        H = $.propertyIsEnumerable,
+        J = E.splice,
         K = D ? D.toStringTag : void 0,
         X = (function() {
           try {
@@ -174,7 +174,7 @@ var badgin = (function(t) {
         var n = St(t),
           r = !n && Tt(t),
           o = !n && !r && Bt(t),
-          i = !n && !r && !o && Ft(t),
+          i = !n && !r && !o && It(t),
           a = n || r || o || i,
           u = a
             ? (function(t, e) {
@@ -184,7 +184,7 @@ var badgin = (function(t) {
             : [],
           c = u.length
         for (var l in t)
-          (!e && !N.call(t, l)) ||
+          (!e && !F.call(t, l)) ||
             (a &&
               ('length' == l ||
                 (o && ('offset' == l || 'parent' == l)) ||
@@ -195,15 +195,15 @@ var badgin = (function(t) {
         return u
       }
       function lt(t, e, n) {
-        ;((void 0 === n || xt(t[e], n)) && (void 0 !== n || e in t)) ||
+        ;((void 0 === n || zt(t[e], n)) && (void 0 !== n || e in t)) ||
           dt(t, e, n)
       }
       function ft(t, e, n) {
         var r = t[e]
-        ;(N.call(t, e) && xt(r, n) && (void 0 !== n || e in t)) || dt(t, e, n)
+        ;(F.call(t, e) && zt(r, n) && (void 0 !== n || e in t)) || dt(t, e, n)
       }
       function st(t, e) {
-        for (var n = t.length; n--; ) if (xt(t[n][0], e)) return n
+        for (var n = t.length; n--; ) if (zt(t[n][0], e)) return n
         return -1
       }
       function dt(t, e, n) {
@@ -229,11 +229,11 @@ var badgin = (function(t) {
             var n = e[t]
             return n === r ? void 0 : n
           }
-          return N.call(e, t) ? e[t] : void 0
+          return F.call(e, t) ? e[t] : void 0
         }),
         (ot.prototype.has = function(t) {
           var e = this.__data__
-          return nt ? void 0 !== e[t] : N.call(e, t)
+          return nt ? void 0 !== e[t] : F.call(e, t)
         }),
         (ot.prototype.set = function(t, e) {
           var n = this.__data__
@@ -329,7 +329,7 @@ var badgin = (function(t) {
             : d
           : K && K in Object(t)
           ? (function(t) {
-              var e = N.call(t, K),
+              var e = F.call(t, K),
                 n = t[K]
               try {
                 t[K] = void 0
@@ -344,16 +344,16 @@ var badgin = (function(t) {
             })(t)
       }
       function yt(t) {
-        return Ct(t) && vt(t) == c
+        return $t(t) && vt(t) == c
       }
       function _t(t) {
         return (
           !(!Pt(t) || ((e = t), U && U in e)) &&
-          (Et(t) ? q : y).test(
+          (Ct(t) ? q : y).test(
             (function(t) {
               if (null != t) {
                 try {
-                  return I.call(t)
+                  return N.call(t)
                 } catch (t) {}
                 try {
                   return t + ''
@@ -375,7 +375,7 @@ var badgin = (function(t) {
         var e = Ot(t),
           n = []
         for (var r in t)
-          ('constructor' != r || (!e && N.call(t, r))) && n.push(r)
+          ('constructor' != r || (!e && F.call(t, r))) && n.push(r)
         return n
       }
       function gt(t, e, n, r, o) {
@@ -395,12 +395,12 @@ var badgin = (function(t) {
                     if (s) {
                       var d = St(c),
                         p = !d && Bt(c),
-                        v = !d && !p && Ft(c)
+                        v = !d && !p && It(c)
                       ;(f = c),
                         d || p || v
                           ? St(u)
                             ? (f = u)
-                            : Ct((m = u)) && kt(m)
+                            : $t((m = u)) && kt(m)
                             ? (f = (function(t, e) {
                                 var n = -1,
                                   r = t.length
@@ -432,14 +432,14 @@ var badgin = (function(t) {
                               )))
                             : (f = [])
                           : (function(t) {
-                              if (!Ct(t) || vt(t) != h) return !1
+                              if (!$t(t) || vt(t) != h) return !1
                               var e = W(t)
                               if (null === e) return !0
-                              var n = N.call(e, 'constructor') && e.constructor
+                              var n = F.call(e, 'constructor') && e.constructor
                               return (
                                 'function' == typeof n &&
                                 n instanceof n &&
-                                I.call(n) == R
+                                N.call(n) == R
                               )
                             })(c) || Tt(c)
                           ? ((f = u),
@@ -457,9 +457,9 @@ var badgin = (function(t) {
                                         o ? dt(n, u, c) : ft(n, u, c)
                                     }
                                     return n
-                                  })(t, It(t))
+                                  })(t, Nt(t))
                                 })(u))
-                              : (!Pt(u) || (r && Et(u))) &&
+                              : (!Pt(u) || (r && Ct(u))) &&
                                 (f = (function(t) {
                                   return 'function' != typeof t.constructor ||
                                     Ot(t)
@@ -478,11 +478,11 @@ var badgin = (function(t) {
                 void 0 === u && (u = i), lt(t, a, u)
               }
             },
-            It
+            Nt
           )
       }
       function mt(t, e) {
-        return zt(
+        return xt(
           (function(t, e, n) {
             return (
               (e = Z(void 0 === e ? t.length - 1 : e, 0)),
@@ -551,9 +551,9 @@ var badgin = (function(t) {
       }
       function Ot(t) {
         var e = t && t.constructor
-        return t === (('function' == typeof e && e.prototype) || C)
+        return t === (('function' == typeof e && e.prototype) || $)
       }
-      var zt = (function(t) {
+      var xt = (function(t) {
         var e = 0,
           n = 0
         return function() {
@@ -580,7 +580,7 @@ var badgin = (function(t) {
             }
           : Mt
       )
-      function xt(t, e) {
+      function zt(t, e) {
         return t === e || (t != t && e != e)
       }
       var Tt = yt(
@@ -590,46 +590,46 @@ var badgin = (function(t) {
         )
           ? yt
           : function(t) {
-              return Ct(t) && N.call(t, 'callee') && !H.call(t, 'callee')
+              return $t(t) && F.call(t, 'callee') && !H.call(t, 'callee')
             },
         St = Array.isArray
       function kt(t) {
-        return null != t && $t(t.length) && !Et(t)
+        return null != t && Et(t.length) && !Ct(t)
       }
       var Bt =
         Y ||
         function() {
           return !1
         }
-      function Et(t) {
+      function Ct(t) {
         if (!Pt(t)) return !1
         var e = vt(t)
         return e == f || e == s || e == l || e == p
       }
-      function $t(t) {
+      function Et(t) {
         return 'number' == typeof t && t > -1 && t % 1 == 0 && t <= u
       }
       function Pt(t) {
         var e = typeof t
         return null != t && ('object' == e || 'function' == e)
       }
-      function Ct(t) {
+      function $t(t) {
         return null != t && 'object' == typeof t
       }
-      var Ft = T
+      var It = T
         ? (function(t) {
             return function(e) {
               return t(e)
             }
           })(T)
         : function(t) {
-            return Ct(t) && $t(t.length) && !!b[vt(t)]
+            return $t(t) && Et(t.length) && !!b[vt(t)]
           }
-      function It(t) {
+      function Nt(t) {
         return kt(t) ? ct(t, !0) : bt(t)
       }
-      var Nt,
-        Ut = ((Nt = function(t, e, n) {
+      var Ft,
+        Ut = ((Ft = function(t, e, n) {
           gt(t, e, n)
         }),
         mt(function(t, e) {
@@ -638,7 +638,7 @@ var badgin = (function(t) {
             o = r > 1 ? e[r - 1] : void 0,
             i = r > 2 ? e[2] : void 0
           for (
-            o = Nt.length > 3 && 'function' == typeof o ? (r--, o) : void 0,
+            o = Ft.length > 3 && 'function' == typeof o ? (r--, o) : void 0,
               i &&
                 (function(t, e, n) {
                   if (!Pt(n)) return !1
@@ -646,7 +646,7 @@ var badgin = (function(t) {
                   return (
                     !!('number' == r
                       ? kt(n) && At(e, n.length)
-                      : 'string' == r && (e in n)) && xt(n[e], t)
+                      : 'string' == r && (e in n)) && zt(n[e], t)
                   )
                 })(e[0], e[1], i) &&
                 ((o = r < 3 ? void 0 : o), (r = 1)),
@@ -655,7 +655,7 @@ var badgin = (function(t) {
 
           ) {
             var a = e[n]
-            a && Nt(t, a, n, o)
+            a && Ft(t, a, n, o)
           }
           return t
         }))
@@ -688,16 +688,7 @@ var badgin = (function(t) {
     p = {
       favicon: null,
       value: null,
-      options: {
-        fontSize: 8 * d,
-        fontFamily: 'Arial',
-        background: '#424242',
-        color: '#ffffff',
-        height: 8,
-        width: 7,
-        opacity: 1,
-        indicator: '!',
-      },
+      options: { backgroundColor: '#424242', color: '#ffffff', indicator: '!' },
     }
   let v = null,
     y = null,
@@ -735,37 +726,36 @@ var badgin = (function(t) {
       )
         return
       const o = r.length - 1,
-        i = n.width * d + 4 * d * o,
-        a = n.height * d,
-        u = h - a,
-        c = h - i - d,
+        i = 8 * d + 4 * d * o,
+        a = h - 7 * d,
+        u = h - i - d,
+        c = 16 * d,
         s = 16 * d,
-        p = 16 * d,
-        v = 5 * d,
-        y = c + i / 2 + 1
+        p = 5 * d,
+        v = u + i / 2 + 1
       t.save(),
-        (t.globalAlpha = n.opacity),
-        (t.fillStyle = n.background),
-        (t.strokeStyle = n.background),
+        (t.globalAlpha = 1),
+        (t.fillStyle = n.backgroundColor),
+        (t.strokeStyle = n.backgroundColor),
         (t.lineWidth = d),
         t.beginPath(),
-        t.moveTo(c + v, u),
-        t.quadraticCurveTo(c, u, c, u + v),
-        t.lineTo(c, s - v),
-        t.quadraticCurveTo(c, s, c + v, s),
-        t.lineTo(p - v, s),
-        t.quadraticCurveTo(p, s, p, s - v),
-        t.lineTo(p, u + v),
-        t.quadraticCurveTo(p, u, p - v, u),
+        t.moveTo(u + p, a),
+        t.quadraticCurveTo(u, a, u, a + p),
+        t.lineTo(u, c - p),
+        t.quadraticCurveTo(u, c, u + p, c),
+        t.lineTo(s - p, c),
+        t.quadraticCurveTo(s, c, s, c - p),
+        t.lineTo(s, a + p),
+        t.quadraticCurveTo(s, a, s - p, a),
         t.closePath(),
         t.fill(),
         t.restore(),
         t.save(),
-        (t.font = `${n.fontSize}px ${n.fontFamily}`),
+        (t.font = `${8 * d}px Arial`),
         (t.fillStyle = n.color),
         (t.textAlign = 'center'),
         (t.textBaseline = 'top'),
-        t.fillText(r, y, 9 * d),
+        t.fillText(r, v, 9 * d),
         t.restore()
     }
   function w() {

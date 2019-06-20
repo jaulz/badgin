@@ -4,13 +4,8 @@ import isPositiveNumber from './isPositiveNumber'
 import isIndicator from './isIndicator'
 
 export type Options = {
-  fontSize: number
-  fontFamily: string
-  background: string
+  backgroundColor: string
   color: string
-  height: number
-  width: number
-  opacity: number
   indicator: string
 }
 
@@ -39,13 +34,8 @@ const size = 16 * ratio
 
 // Options
 export const defaultOptions: Options = {
-  fontSize: 8 * ratio,
-  fontFamily: 'Arial',
-  background: '#424242',
+  backgroundColor: '#424242',
   color: '#ffffff',
-  height: 8,
-  width: 7,
-  opacity: 1,
   indicator: '!',
 }
 
@@ -154,8 +144,8 @@ const drawBubble = (
 
   // Calculate position etc.
   const length = finalValue.length - 1
-  const width = options.width * ratio + 4 * ratio * length
-  const height = options.height * ratio
+  const width = 8 * ratio + 4 * ratio * length
+  const height = 7 * ratio
   const top = size - height
   const left = size - width - ratio
   const bottom = 16 * ratio
@@ -165,9 +155,9 @@ const drawBubble = (
 
   // Bubble
   context.save()
-  context.globalAlpha = options.opacity
-  context.fillStyle = options.background
-  context.strokeStyle = options.background
+  context.globalAlpha = 1
+  context.fillStyle = options.backgroundColor
+  context.strokeStyle = options.backgroundColor
   context.lineWidth = ratio
   context.beginPath()
   context.moveTo(left + radius, top)
@@ -184,7 +174,7 @@ const drawBubble = (
 
   // Value
   context.save()
-  context.font = `${options.fontSize}px ${options.fontFamily}`
+  context.font = `${8 * ratio}px Arial`
   context.fillStyle = options.color
   context.textAlign = 'center'
   context.textBaseline = 'top'
