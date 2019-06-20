@@ -31,12 +31,13 @@ export function isAvailable() {
 }
 
 export function set(value: Value) {
+  current.value = value
+
   if (!isAvailable()) {
     warn()
     return
   }
 
-  current.value = value
   ;(<any>window).ExperimentalBadge.set(value)
 }
 

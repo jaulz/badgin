@@ -20,7 +20,7 @@ var badgin = (function(t) {
     )
   }
   function i(t) {
-    o() ? ((r.value = t), window.ExperimentalBadge.set(t)) : n()
+    ;(r.value = t), o() ? window.ExperimentalBadge.set(t) : n()
   }
   var a =
     'undefined' != typeof globalThis

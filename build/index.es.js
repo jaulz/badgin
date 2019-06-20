@@ -25,11 +25,11 @@ function isAvailable() {
   return current.mediaQuery.matches && 'ExperimentalBadge' in window
 }
 function set(value) {
+  current.value = value
   if (!isAvailable()) {
     warn()
     return
   }
-  current.value = value
   window.ExperimentalBadge.set(value)
 }
 function clear() {
