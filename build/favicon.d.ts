@@ -11,6 +11,6 @@ export declare type Options = {
 }
 export declare const defaultOptions: Options
 export declare function isAvailable(): boolean
-export declare function set(value: Value, options?: Partial<Options>): void
+export declare function set(value: Value, options?: Partial<Options>): boolean
 export declare function clear(): void
 //# sourceMappingURL=favicon.d.ts.map

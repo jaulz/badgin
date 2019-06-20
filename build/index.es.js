@@ -28,9 +28,10 @@ function set(value) {
   current.value = value
   if (!isAvailable()) {
     warn()
-    return
+    return false
   }
   window.ExperimentalBadge.set(value)
+  return true
 }
 function clear() {
   if (!isAvailable()) {
@@ -195,13 +196,15 @@ function isAvailable$1() {
   return !!context && !!original
 }
 function set$1(value, options) {
-  if (!isAvailable$1()) {
-    return
-  }
   // Remember options
+  current$1.value = value
   merge(current$1.options, options)
+  if (!isAvailable$1()) {
+    return false
+  }
   // Draw icon
-  drawFavicon(value, current$1.options)
+  drawFavicon(current$1.value, current$1.options)
+  return true
 }
 function clear$1() {
   if (!isAvailable$1()) {
@@ -260,17 +263,20 @@ function clear$2() {
  * Sets badge
  */
 function set$3(value, options = {}) {
-  const method =
-    options.method ||
-    (isAvailable() ? 'Badging' : isAvailable$1() ? 'Favicon' : 'Title')
-  switch (method) {
+  switch (options.method) {
+    case undefined:
     case 'Badging': {
-      set(value)
-      return
+      if (set(value)) {
+        // Break only if method is explicitly requested
+        if (options.method === 'Badging') {
+          break
+        }
+      }
     }
     case 'Favicon': {
-      set$1(value, options.favicon)
-      return
+      if (set$1(value, options.favicon)) {
+        break
+      }
     }
     default: {
       set$2(value, options.title)

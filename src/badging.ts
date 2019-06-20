@@ -35,10 +35,11 @@ export function set(value: Value) {
 
   if (!isAvailable()) {
     warn()
-    return
+    return false
   }
 
   ;(<any>window).ExperimentalBadge.set(value)
+  return true
 }
 
 export function clear() {

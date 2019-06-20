@@ -21,23 +21,21 @@ export interface Options {
  * Sets badge
  */
 export function set(value: Value, options: Partial<Options> = {}) {
-  const method =
-    options.method ||
-    (badging.isAvailable()
-      ? 'Badging'
-      : favicon.isAvailable()
-      ? 'Favicon'
-      : 'Title')
-
-  switch (method) {
+  switch (options.method) {
+    case undefined:
     case 'Badging': {
-      badging.set(value)
-      return
+      if (badging.set(value)) {
+        // Break only if method is explicitly requested
+        if (options.method === 'Badging') {
+          break
+        }
+      }
     }
 
     case 'Favicon': {
-      favicon.set(value, options.favicon)
-      return
+      if (favicon.set(value, options.favicon)) {
+        break
+      }
     }
 
     default: {

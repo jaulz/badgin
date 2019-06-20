@@ -206,15 +206,17 @@ export function isAvailable() {
 }
 
 export function set(value: Value, options?: Partial<Options>) {
-  if (!isAvailable()) {
-    return
-  }
-
   // Remember options
+  current.value = value
   merge(current.options, options)
 
+  if (!isAvailable()) {
+    return false
+  }
+
   // Draw icon
-  drawFavicon(value, current.options)
+  drawFavicon(current.value, current.options)
+  return true
 }
 
 export function clear() {

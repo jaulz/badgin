@@ -1,1 +1,1 @@
-{"version":3,"file":"badging.d.ts","sourceRoot":"","sources":["src/badging.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAA;AAmB/B,wBAAgB,WAAW,YAW1B;AAED,wBAAgB,GAAG,CAAC,KAAK,EAAE,KAAK,QAS/B;AAED,wBAAgB,KAAK,SAMpB"}
+{"version":3,"file":"badging.d.ts","sourceRoot":"","sources":["src/badging.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAA;AAmB/B,wBAAgB,WAAW,YAW1B;AAED,wBAAgB,GAAG,CAAC,KAAK,EAAE,KAAK,WAU/B;AAED,wBAAgB,KAAK,SAMpB"}
