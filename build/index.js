@@ -18,29 +18,37 @@ const warn = () => {
   )
   warnedBefore = true
 }
+const current = {
+  mediaQuery: null,
+  value: null,
+}
 function isAvailable() {
-  return (
-    window.matchMedia('(display-mode: standalone)').matches &&
-    'ExperimentalBadge' in window
-  )
+  if (!current.mediaQuery) {
+    current.mediaQuery = window.matchMedia('(display-mode: standalone)')
+    // Get notified once app is installed
+    current.mediaQuery.onchange = event => {
+      set(current.value)
+    }
+  }
+  return current.mediaQuery.matches && 'ExperimentalBadge' in window
 }
 function set(value) {
   if (!isAvailable()) {
     warn()
     return
   }
+  current.value = value
   window.ExperimentalBadge.set(value)
 }
 function clear() {
   if (!isAvailable()) {
-    warn()
     return
   }
   window.ExperimentalBadge.clear()
 }
 
 function isPositiveNumber(value) {
-  return value && Number.isInteger(value) && value >= 0
+  return !!value && Number.isInteger(value) && value >= 0
 }
 
 function isIndicator(value) {
@@ -64,22 +72,6 @@ const getFavicon = () => {
 // Calculate the size of the font and canvas element based on device's ratio
 const ratio = Math.ceil(window.devicePixelRatio) || 1
 const size = 16 * ratio
-// References to the various of favicons that we need to track to reset and update the counters
-let original = null
-let image = null
-// Setup the source canvas element which we use to generate the favicon's data-url's from
-let canvas = null
-let context = null
-// Initialize
-let initialize = () => {
-  original = getFavicon()
-  image = document.createElement('img')
-  canvas = document.createElement('canvas')
-  canvas.width = size
-  canvas.height = size
-  context = canvas.getContext ? canvas.getContext('2d') : null
-  initialize = () => {}
-}
 // Options
 const defaultOptions = {
   fontSize: 8 * ratio,
@@ -89,7 +81,19 @@ const defaultOptions = {
   height: 8,
   width: 7,
   opacity: 1,
+  indicator: '!',
 }
+// References to the favicons that we need to track in order to reset and update the counters
+const current$1 = {
+  favicon: null,
+  value: null,
+  options: defaultOptions,
+}
+let original = null
+let image = null
+// Setup the source canvas element which we use to generate the favicon's data-url's from
+let canvas = null
+let context = null
 // Update the favicon
 const setFavicon = url => {
   if (!url) {
@@ -137,11 +141,16 @@ const drawFavicon = (value, options) => {
 // Draws the bubble on the canvas
 const drawBubble = (context, value, options) => {
   // Do we need to render the buble at all?
-  const finalValue = isIndicator(value)
-    ? ' '
-    : isPositiveNumber(value)
-    ? String(value)
-    : null
+  let finalValue = null
+  if (isIndicator(value)) {
+    finalValue = options.indicator
+  } else if (isPositiveNumber(value)) {
+    if (value < 100) {
+      finalValue = String(value)
+    } else {
+      finalValue = '99+'
+    }
+  }
   if (finalValue === null) {
     return
   }
@@ -154,13 +163,13 @@ const drawBubble = (context, value, options) => {
   const bottom = 16 * ratio
   const right = 16 * ratio
   const radius = 5 * ratio
+  const center = left + width / 2 + 1
+  // Bubble
   context.save()
   context.globalAlpha = options.opacity
-  context.font = `${options.fontSize}px ${options.fontFamily}`
   context.fillStyle = options.background
   context.strokeStyle = options.background
   context.lineWidth = ratio
-  // Bubble
   context.beginPath()
   context.moveTo(left + radius, top)
   context.quadraticCurveTo(left, top, left, top + radius)
@@ -172,69 +181,107 @@ const drawBubble = (context, value, options) => {
   context.quadraticCurveTo(right, top, right - radius, top)
   context.closePath()
   context.fill()
+  context.restore()
   // Value
+  context.save()
+  context.font = `${options.fontSize}px ${options.fontFamily}`
   context.fillStyle = options.color
-  context.textAlign = 'right'
+  context.textAlign = 'center'
   context.textBaseline = 'top'
-  context.fillText(finalValue, ratio === 2 ? 29 : 15, 9 * ratio)
+  context.fillText(finalValue, center, 9 * ratio)
   context.restore()
 }
 function isAvailable$1() {
-  initialize()
+  if (!original) {
+    original = getFavicon()
+    image = document.createElement('img')
+    canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    context = canvas.getContext ? canvas.getContext('2d') : null
+  }
   return !!context && !!original
 }
 function set$1(value, options) {
-  drawFavicon(value, options)
+  if (!isAvailable$1()) {
+    return
+  }
+  // Remember options
+  merge(current$1.options, options)
+  // Draw icon
+  drawFavicon(value, current$1.options)
 }
 function clear$1() {
+  if (!isAvailable$1()) {
+    return
+  }
   setFavicon(original.href)
 }
 
-let original$1 = ''
 const defaultOptions$1 = {
   indicator: '!',
 }
-function set$2(value, options) {
-  if (!original$1) {
-    original$1 = document.title
-  }
+const current$2 = {
+  title: null,
+  value: null,
+  options: defaultOptions$1,
+}
+function changeTitle(title, value, options) {
+  let newTitle = title
   if (isIndicator(value)) {
-    document.title = `(${options.indicator}) ${original$1}`
-    return
+    newTitle = `(${options.indicator}) ${title}`
+  } else if (isPositiveNumber(value)) {
+    newTitle = `(${value}) ${title}`
   }
-  if (isPositiveNumber(value)) {
-    document.title = `(${value}) ${original$1}`
-    return
+  const element = document.querySelector('title')
+  if (element) {
+    element.childNodes[0].nodeValue = newTitle
   }
-  document.title = original$1
+}
+function set$2(value, options) {
+  if (current$2.title === null) {
+    current$2.title = document.title
+    // Watch changes of title
+    Object.defineProperty(document, 'title', {
+      get: () => {
+        return current$2.title
+      },
+      set: title => {
+        console.log('change')
+        current$2.title = title
+        changeTitle(current$2.title, current$2.value, current$2.options)
+      },
+    })
+  }
+  // Remember value and options
+  current$2.value = value
+  merge(current$2.options, options)
+  // Trigger change
+  document.title = document.title
 }
 function clear$2() {
-  document.title = original$1
+  current$2.value = null
+  document.title = document.title
 }
 
-const getDefaultOptions = () => {
-  return {
-    method: isAvailable() ? 'Badging' : isAvailable$1() ? 'Favicon' : 'Title',
-    favicon: defaultOptions,
-    title: defaultOptions$1,
-  }
-}
 /**
  * Sets badge
  */
-function set$3(value, options = getDefaultOptions()) {
-  const mergedOptions = merge({}, getDefaultOptions(), options)
-  switch (mergedOptions.method) {
+function set$3(value, options = {}) {
+  const method =
+    options.method ||
+    (isAvailable() ? 'Badging' : isAvailable$1() ? 'Favicon' : 'Title')
+  switch (method) {
     case 'Badging': {
       set(value)
       return
     }
     case 'Favicon': {
-      set$1(value, mergedOptions.favicon)
+      set$1(value, options.favicon)
       return
     }
     default: {
-      set$2(value, mergedOptions.title)
+      set$2(value, options.title)
     }
   }
 }

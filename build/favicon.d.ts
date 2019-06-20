@@ -7,9 +7,10 @@ export declare type Options = {
   height: number
   width: number
   opacity: number
+  indicator: string
 }
 export declare const defaultOptions: Options
 export declare function isAvailable(): boolean
-export declare function set(value: Value, options: Options): void
+export declare function set(value: Value, options?: Partial<Options>): void
 export declare function clear(): void
 //# sourceMappingURL=favicon.d.ts.map

@@ -12,11 +12,22 @@ const warn = () => {
   warnedBefore = true
 }
 
+const current: { mediaQuery: MediaQueryList | null; value: Value } = {
+  mediaQuery: null,
+  value: null,
+}
+
 export function isAvailable() {
-  return (
-    window.matchMedia('(display-mode: standalone)').matches &&
-    'ExperimentalBadge' in window
-  )
+  if (!current.mediaQuery) {
+    current.mediaQuery = window.matchMedia('(display-mode: standalone)')
+
+    // Get notified once app is installed
+    current.mediaQuery.onchange = event => {
+      set(current.value)
+    }
+  }
+
+  return current.mediaQuery.matches && 'ExperimentalBadge' in window
 }
 
 export function set(value: Value) {
@@ -25,6 +36,7 @@ export function set(value: Value) {
     return
   }
 
+  current.value = value
   ;(<any>window).ExperimentalBadge.set(value)
 }
 

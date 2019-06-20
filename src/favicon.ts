@@ -11,6 +11,7 @@ export type Options = {
   height: number
   width: number
   opacity: number
+  indicator: string
 }
 
 type Favicon = HTMLLinkElement | null
@@ -45,10 +46,11 @@ export const defaultOptions: Options = {
   height: 8,
   width: 7,
   opacity: 1,
+  indicator: '!',
 }
 
-// References to the various of favicons that we need to track to reset and update the counters
-const current = {
+// References to the favicons that we need to track in order to reset and update the counters
+const current: { favicon: Favicon; value: Value; options: Options } = {
   favicon: null,
   value: null,
   options: defaultOptions,
@@ -136,11 +138,16 @@ const drawBubble = (
   options: Options
 ) => {
   // Do we need to render the buble at all?
-  const finalValue = isIndicator(value)
-    ? ' '
-    : isPositiveNumber(value)
-    ? String(value)
-    : null
+  let finalValue = null
+  if (isIndicator(value)) {
+    finalValue = options.indicator
+  } else if (isPositiveNumber(value)) {
+    if (value < 100) {
+      finalValue = String(value)
+    } else {
+      finalValue = '99+'
+    }
+  }
   if (finalValue === null) {
     return
   }
@@ -154,15 +161,14 @@ const drawBubble = (
   const bottom = 16 * ratio
   const right = 16 * ratio
   const radius = 5 * ratio
+  const center = left + width / 2 + 1
 
+  // Bubble
   context.save()
   context.globalAlpha = options.opacity
-  context.font = `${options.fontSize}px ${options.fontFamily}`
   context.fillStyle = options.background
   context.strokeStyle = options.background
   context.lineWidth = ratio
-
-  // Bubble
   context.beginPath()
   context.moveTo(left + radius, top)
   context.quadraticCurveTo(left, top, left, top + radius)
@@ -174,13 +180,15 @@ const drawBubble = (
   context.quadraticCurveTo(right, top, right - radius, top)
   context.closePath()
   context.fill()
+  context.restore()
 
   // Value
+  context.save()
+  context.font = `${options.fontSize}px ${options.fontFamily}`
   context.fillStyle = options.color
-  context.textAlign = 'right'
+  context.textAlign = 'center'
   context.textBaseline = 'top'
-  context.fillText(finalValue, ratio === 2 ? 29 : 15, 9 * ratio)
-
+  context.fillText(finalValue, center, 9 * ratio)
   context.restore()
 }
 
@@ -197,7 +205,7 @@ export function isAvailable() {
   return !!context && !!original
 }
 
-export function set(value: Value, options: Partial<Options>) {
+export function set(value: Value, options?: Partial<Options>) {
   if (!isAvailable()) {
     return
   }
@@ -206,7 +214,7 @@ export function set(value: Value, options: Partial<Options>) {
   merge(current.options, options)
 
   // Draw icon
-  drawFavicon(value, options)
+  drawFavicon(value, current.options)
 }
 
 export function clear() {

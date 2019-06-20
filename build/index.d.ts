@@ -1,12 +1,5 @@
 import * as favicon from './favicon'
 import * as title from './title'
-declare type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
-    ? Array<DeepPartial<U>>
-    : T[P] extends ReadonlyArray<infer U>
-    ? ReadonlyArray<DeepPartial<U>>
-    : DeepPartial<T[P]>
-}
 export declare type Value = number | null | undefined
 export interface Interface {
   set: (value: Value) => void
@@ -15,16 +8,15 @@ export interface Interface {
 export declare type Method = 'Badging' | 'Favicon' | 'Title'
 export interface Options {
   method: Method
-  favicon: favicon.Options
-  title: title.Options
+  favicon: Partial<favicon.Options>
+  title: Partial<title.Options>
 }
 /**
  * Sets badge
  */
-export declare function set(value: Value, options?: DeepPartial<Options>): void
+export declare function set(value: Value, options?: Partial<Options>): void
 /**
  * Clears badge
  */
 export declare function clear(): void
-export {}
 //# sourceMappingURL=index.d.ts.map

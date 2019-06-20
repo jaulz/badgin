@@ -3,21 +3,23 @@ import { Value } from './index'
 import isIndicator from './isIndicator'
 import isPositiveNumber from './isPositiveNumber'
 
+export type Options = {
+  indicator: string
+}
+
+type Title = string | null
+
 export const defaultOptions: Options = {
   indicator: '!',
 }
 
-const current = {
+const current: { title: Title; value: Value; options: Options } = {
   title: null,
   value: null,
   options: defaultOptions,
 }
 
-export type Options = {
-  indicator: string
-}
-
-export function changeTitle(title: string, value: Value, options: Options) {
+export function changeTitle(title: Title, value: Value, options: Options) {
   let newTitle = title
 
   if (isIndicator(value)) {
@@ -26,23 +28,31 @@ export function changeTitle(title: string, value: Value, options: Options) {
     newTitle = `(${value}) ${title}`
   }
 
-  document.querySelector('title').childNodes[0].nodeValue = newTitle
+  const element = document.querySelector('title')
+  if (element) {
+    element.childNodes[0].nodeValue = newTitle
+  }
 }
 
-export function set(value: Value, options: Partial<Options>) {
+export function set(value: Value, options?: Partial<Options>) {
   if (current.title === null) {
     current.title = document.title
 
     // Watch changes of title
     Object.defineProperty(document, 'title', {
+      get: () => {
+        return current.title
+      },
       set: title => {
+        console.log('change')
         current.title = title
-        changeTitle(current.title, value, current.options)
+        changeTitle(current.title, current.value, current.options)
       },
     })
   }
 
-  // Remember options
+  // Remember value and options
+  current.value = value
   merge(current.options, options)
 
   // Trigger change

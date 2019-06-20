@@ -1,5 +1,3 @@
 import { Value } from './index'
-export default function isPositiveNumber(
-  value: Value
-): boolean | 0 | null | undefined
+export default function isPositiveNumber(value: Value): value is number
 //# sourceMappingURL=isPositiveNumber.d.ts.map

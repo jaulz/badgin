@@ -17,28 +17,17 @@ export interface Options {
   title: Partial<title.Options>
 }
 
-const getDefaultOptions = (): Options => {
-  return {
-    method: badging.isAvailable()
-      ? 'Badging'
-      : favicon.isAvailable()
-      ? 'Favicon'
-      : 'Title',
-    favicon: favicon.defaultOptions,
-    title: title.defaultOptions,
-  }
-}
-
 /**
  * Sets badge
  */
-export function set(value: Value, options?: Partial<Options>) {
+export function set(value: Value, options: Partial<Options> = {}) {
   const method =
-    options.method || badging.isAvailable()
+    options.method ||
+    (badging.isAvailable()
       ? 'Badging'
       : favicon.isAvailable()
       ? 'Favicon'
-      : 'Title'
+      : 'Title')
 
   switch (method) {
     case 'Badging': {

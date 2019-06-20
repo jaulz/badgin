@@ -1,6 +1,28 @@
 var badgin = (function(t) {
   'use strict'
-  var e =
+  let e = !1
+  const n = () => {
+      e ||
+        (console.warn(
+          'Application must run in standalone mode and Badging API must be enabled. Please check here how you can enable it: https://developers.google.com/web/updates/2018/12/badging-api#use'
+        ),
+        (e = !0))
+    },
+    r = { mediaQuery: null, value: null }
+  function o() {
+    return (
+      r.mediaQuery ||
+        ((r.mediaQuery = window.matchMedia('(display-mode: standalone)')),
+        (r.mediaQuery.onchange = t => {
+          i(r.value)
+        })),
+      r.mediaQuery.matches && 'ExperimentalBadge' in window
+    )
+  }
+  function i(t) {
+    o() ? ((r.value = t), window.ExperimentalBadge.set(t)) : n()
+  }
+  var a =
     'undefined' != typeof globalThis
       ? globalThis
       : 'undefined' != typeof window
@@ -10,14 +32,14 @@ var badgin = (function(t) {
       : 'undefined' != typeof self
       ? self
       : {}
-  var n,
-    r = ((function(t, n) {
-      var r = 200,
-        o = '__lodash_hash_undefined__',
-        i = 800,
-        a = 16,
-        c = 9007199254740991,
-        u = '[object Arguments]',
+  var u,
+    c = ((function(t, e) {
+      var n = 200,
+        r = '__lodash_hash_undefined__',
+        o = 800,
+        i = 16,
+        u = 9007199254740991,
+        c = '[object Arguments]',
         l = '[object AsyncFunction]',
         f = '[object Function]',
         s = '[object GeneratorFunction]',
@@ -25,32 +47,32 @@ var badgin = (function(t) {
         h = '[object Object]',
         p = '[object Proxy]',
         v = '[object Undefined]',
-        _ = /^\[object .+?Constructor\]$/,
-        y = /^(?:0|[1-9]\d*)$/,
-        b = {}
-      ;(b['[object Float32Array]'] = b['[object Float64Array]'] = b[
+        y = /^\[object .+?Constructor\]$/,
+        _ = /^(?:0|[1-9]\d*)$/,
+        g = {}
+      ;(g['[object Float32Array]'] = g['[object Float64Array]'] = g[
         '[object Int8Array]'
-      ] = b['[object Int16Array]'] = b['[object Int32Array]'] = b[
+      ] = g['[object Int16Array]'] = g['[object Int32Array]'] = g[
         '[object Uint8Array]'
-      ] = b['[object Uint8ClampedArray]'] = b['[object Uint16Array]'] = b[
+      ] = g['[object Uint8ClampedArray]'] = g['[object Uint16Array]'] = g[
         '[object Uint32Array]'
       ] = !0),
-        (b[u] = b['[object Array]'] = b['[object ArrayBuffer]'] = b[
+        (g[c] = g['[object Array]'] = g['[object ArrayBuffer]'] = g[
           '[object Boolean]'
-        ] = b['[object DataView]'] = b['[object Date]'] = b[
+        ] = g['[object DataView]'] = g['[object Date]'] = g[
           '[object Error]'
-        ] = b[f] = b['[object Map]'] = b['[object Number]'] = b[h] = b[
+        ] = g[f] = g['[object Map]'] = g['[object Number]'] = g[h] = g[
           '[object RegExp]'
-        ] = b['[object Set]'] = b['[object String]'] = b[
+        ] = g['[object Set]'] = g['[object String]'] = g[
           '[object WeakMap]'
         ] = !1)
-      var g = 'object' == typeof e && e && e.Object === Object && e,
+      var b = 'object' == typeof a && a && a.Object === Object && a,
         m = 'object' == typeof self && self && self.Object === Object && self,
-        j = g || m || Function('return this')(),
-        w = n && !n.nodeType && n,
+        j = b || m || Function('return this')(),
+        w = e && !e.nodeType && e,
         A = w && t && !t.nodeType && t,
         O = A && A.exports === w,
-        z = O && g.process,
+        z = O && b.process,
         x = (function() {
           try {
             return z && z.binding && z.binding('util')
@@ -63,16 +85,16 @@ var badgin = (function(t) {
       var B,
         E,
         $,
-        k = Array.prototype,
-        F = Function.prototype,
-        P = Object.prototype,
+        P = Array.prototype,
+        k = Function.prototype,
+        F = Object.prototype,
         C = j['__core-js_shared__'],
-        I = F.toString,
-        N = P.hasOwnProperty,
+        I = k.toString,
+        N = F.hasOwnProperty,
         U = (B = /[^.]+$/.exec((C && C.keys && C.keys.IE_PROTO) || ''))
           ? 'Symbol(src)_1.' + B
           : '',
-        M = P.toString,
+        M = F.toString,
         R = I.call(Object),
         q = RegExp(
           '^' +
@@ -84,26 +106,26 @@ var badgin = (function(t) {
               ) +
             '$'
         ),
-        D = O ? j.Buffer : void 0,
-        L = j.Symbol,
-        W = j.Uint8Array,
-        G = D ? D.allocUnsafe : void 0,
-        V = ((E = Object.getPrototypeOf),
+        Q = O ? j.Buffer : void 0,
+        D = j.Symbol,
+        L = j.Uint8Array,
+        V = Q ? Q.allocUnsafe : void 0,
+        W = ((E = Object.getPrototypeOf),
         ($ = Object),
         function(t) {
           return E($(t))
         }),
-        H = Object.create,
-        J = P.propertyIsEnumerable,
-        K = k.splice,
-        Q = L ? L.toStringTag : void 0,
+        G = Object.create,
+        H = F.propertyIsEnumerable,
+        J = P.splice,
+        K = D ? D.toStringTag : void 0,
         X = (function() {
           try {
             var t = wt(Object, 'defineProperty')
             return t({}, '', {}), t
           } catch (t) {}
         })(),
-        Y = D ? D.isBuffer : void 0,
+        Y = Q ? Q.isBuffer : void 0,
         Z = Math.max,
         tt = Date.now,
         et = wt(j, 'Map'),
@@ -111,8 +133,8 @@ var badgin = (function(t) {
         rt = (function() {
           function t() {}
           return function(e) {
-            if (!Ft(e)) return {}
-            if (H) return H(e)
+            if (!kt(e)) return {}
+            if (G) return G(e)
             t.prototype = e
             var n = new t()
             return (t.prototype = void 0), n
@@ -142,23 +164,23 @@ var badgin = (function(t) {
           this.set(r[0], r[1])
         }
       }
-      function ct(t) {
+      function ut(t) {
         var e = (this.__data__ = new it(t))
         this.size = e.size
       }
-      function ut(t, e) {
+      function ct(t, e) {
         var n = St(t),
           r = !n && Tt(t),
           o = !n && !r && Et(t),
           i = !n && !r && !o && Ct(t),
           a = n || r || o || i,
-          c = a
+          u = a
             ? (function(t, e) {
                 for (var n = -1, r = Array(t); ++n < t; ) r[n] = e(n)
                 return r
               })(t.length, String)
             : [],
-          u = c.length
+          c = u.length
         for (var l in t)
           (!e && !N.call(t, l)) ||
             (a &&
@@ -166,9 +188,9 @@ var badgin = (function(t) {
                 (o && ('offset' == l || 'parent' == l)) ||
                 (i &&
                   ('buffer' == l || 'byteLength' == l || 'byteOffset' == l)) ||
-                At(l, u))) ||
-            c.push(l)
-        return c
+                At(l, c))) ||
+            u.push(l)
+        return u
       }
       function lt(t, e, n) {
         ;((void 0 === n || xt(t[e], n)) && (void 0 !== n || e in t)) ||
@@ -203,7 +225,7 @@ var badgin = (function(t) {
           var e = this.__data__
           if (nt) {
             var n = e[t]
-            return n === o ? void 0 : n
+            return n === r ? void 0 : n
           }
           return N.call(e, t) ? e[t] : void 0
         }),
@@ -215,7 +237,7 @@ var badgin = (function(t) {
           var n = this.__data__
           return (
             (this.size += this.has(t) ? 0 : 1),
-            (n[t] = nt && void 0 === e ? o : e),
+            (n[t] = nt && void 0 === e ? r : e),
             this
           )
         }),
@@ -227,7 +249,7 @@ var badgin = (function(t) {
             n = st(e, t)
           return !(
             n < 0 ||
-            (n == e.length - 1 ? e.pop() : K.call(e, n, 1), --this.size, 0)
+            (n == e.length - 1 ? e.pop() : J.call(e, n, 1), --this.size, 0)
           )
         }),
         (it.prototype.get = function(t) {
@@ -266,35 +288,35 @@ var badgin = (function(t) {
             r = n.size
           return n.set(t, e), (this.size += n.size == r ? 0 : 1), this
         }),
-        (ct.prototype.clear = function() {
+        (ut.prototype.clear = function() {
           ;(this.__data__ = new it()), (this.size = 0)
         }),
-        (ct.prototype.delete = function(t) {
+        (ut.prototype.delete = function(t) {
           var e = this.__data__,
             n = e.delete(t)
           return (this.size = e.size), n
         }),
-        (ct.prototype.get = function(t) {
+        (ut.prototype.get = function(t) {
           return this.__data__.get(t)
         }),
-        (ct.prototype.has = function(t) {
+        (ut.prototype.has = function(t) {
           return this.__data__.has(t)
         }),
-        (ct.prototype.set = function(t, e) {
-          var n = this.__data__
-          if (n instanceof it) {
-            var o = n.__data__
-            if (!et || o.length < r - 1)
-              return o.push([t, e]), (this.size = ++n.size), this
-            n = this.__data__ = new at(o)
+        (ut.prototype.set = function(t, e) {
+          var r = this.__data__
+          if (r instanceof it) {
+            var o = r.__data__
+            if (!et || o.length < n - 1)
+              return o.push([t, e]), (this.size = ++r.size), this
+            r = this.__data__ = new at(o)
           }
-          return n.set(t, e), (this.size = n.size), this
+          return r.set(t, e), (this.size = r.size), this
         })
       var ht,
         pt = function(t, e, n) {
           for (var r = -1, o = Object(t), i = n(t), a = i.length; a--; ) {
-            var c = i[ht ? a : ++r]
-            if (!1 === e(o[c], c, o)) break
+            var u = i[ht ? a : ++r]
+            if (!1 === e(o[u], u, o)) break
           }
           return t
         }
@@ -303,29 +325,29 @@ var badgin = (function(t) {
           ? void 0 === t
             ? v
             : d
-          : Q && Q in Object(t)
+          : K && K in Object(t)
           ? (function(t) {
-              var e = N.call(t, Q),
-                n = t[Q]
+              var e = N.call(t, K),
+                n = t[K]
               try {
-                t[Q] = void 0
+                t[K] = void 0
                 var r = !0
               } catch (t) {}
               var o = M.call(t)
-              r && (e ? (t[Q] = n) : delete t[Q])
+              r && (e ? (t[K] = n) : delete t[K])
               return o
             })(t)
           : (function(t) {
               return M.call(t)
             })(t)
       }
-      function _t(t) {
-        return Pt(t) && vt(t) == u
-      }
       function yt(t) {
+        return Ft(t) && vt(t) == c
+      }
+      function _t(t) {
         return (
-          !(!Ft(t) || ((e = t), U && U in e)) &&
-          ($t(t) ? q : _).test(
+          !(!kt(t) || ((e = t), U && U in e)) &&
+          ($t(t) ? q : y).test(
             (function(t) {
               if (null != t) {
                 try {
@@ -341,8 +363,8 @@ var badgin = (function(t) {
         )
         var e
       }
-      function bt(t) {
-        if (!Ft(t))
+      function gt(t) {
+        if (!kt(t))
           return (function(t) {
             var e = []
             if (null != t) for (var n in Object(t)) e.push(n)
@@ -354,62 +376,62 @@ var badgin = (function(t) {
           ('constructor' != r || (!e && N.call(t, r))) && n.push(r)
         return n
       }
-      function gt(t, e, n, r, o) {
+      function bt(t, e, n, r, o) {
         t !== e &&
           pt(
             e,
             function(i, a) {
-              if (Ft(i))
-                o || (o = new ct()),
+              if (kt(i))
+                o || (o = new ut()),
                   (function(t, e, n, r, o, i, a) {
-                    var c = S(t, n),
-                      u = S(e, n),
-                      l = a.get(u)
+                    var u = S(t, n),
+                      c = S(e, n),
+                      l = a.get(c)
                     if (l) return void lt(t, n, l)
-                    var f = i ? i(c, u, n + '', t, e, a) : void 0,
+                    var f = i ? i(u, c, n + '', t, e, a) : void 0,
                       s = void 0 === f
                     if (s) {
-                      var d = St(u),
-                        p = !d && Et(u),
-                        v = !d && !p && Ct(u)
-                      ;(f = u),
+                      var d = St(c),
+                        p = !d && Et(c),
+                        v = !d && !p && Ct(c)
+                      ;(f = c),
                         d || p || v
-                          ? St(c)
-                            ? (f = c)
-                            : Pt((m = c)) && Bt(m)
+                          ? St(u)
+                            ? (f = u)
+                            : Ft((m = u)) && Bt(m)
                             ? (f = (function(t, e) {
                                 var n = -1,
                                   r = t.length
                                 e || (e = Array(r))
                                 for (; ++n < r; ) e[n] = t[n]
                                 return e
-                              })(c))
+                              })(u))
                             : p
                             ? ((s = !1),
                               (f = (function(t, e) {
                                 if (e) return t.slice()
                                 var n = t.length,
-                                  r = G ? G(n) : new t.constructor(n)
+                                  r = V ? V(n) : new t.constructor(n)
                                 return t.copy(r), r
-                              })(u, !0)))
+                              })(c, !0)))
                             : v
                             ? ((s = !1),
-                              (_ = u),
-                              (y = !0
-                                ? ((b = _.buffer),
-                                  (g = new b.constructor(b.byteLength)),
-                                  new W(g).set(new W(b)),
-                                  g)
-                                : _.buffer),
-                              (f = new _.constructor(
-                                y,
-                                _.byteOffset,
-                                _.length
+                              (y = c),
+                              (_ = !0
+                                ? ((g = y.buffer),
+                                  (b = new g.constructor(g.byteLength)),
+                                  new L(b).set(new L(g)),
+                                  b)
+                                : y.buffer),
+                              (f = new y.constructor(
+                                _,
+                                y.byteOffset,
+                                y.length
                               )))
                             : (f = [])
                           : (function(t) {
-                              if (!Pt(t) || vt(t) != h) return !1
-                              var e = V(t)
+                              if (!Ft(t) || vt(t) != h) return !1
+                              var e = W(t)
                               if (null === e) return !0
                               var n = N.call(e, 'constructor') && e.constructor
                               return (
@@ -417,9 +439,9 @@ var badgin = (function(t) {
                                 n instanceof n &&
                                 I.call(n) == R
                               )
-                            })(u) || Tt(u)
-                          ? ((f = c),
-                            Tt(c)
+                            })(c) || Tt(c)
+                          ? ((f = u),
+                            Tt(u)
                               ? (f = (function(t) {
                                   return (function(t, e, n, r) {
                                     var o = !n
@@ -427,31 +449,31 @@ var badgin = (function(t) {
                                     var i = -1,
                                       a = e.length
                                     for (; ++i < a; ) {
-                                      var c = e[i],
-                                        u = r ? r(n[c], t[c], c, n, t) : void 0
-                                      void 0 === u && (u = t[c]),
-                                        o ? dt(n, c, u) : ft(n, c, u)
+                                      var u = e[i],
+                                        c = r ? r(n[u], t[u], u, n, t) : void 0
+                                      void 0 === c && (c = t[u]),
+                                        o ? dt(n, u, c) : ft(n, u, c)
                                     }
                                     return n
                                   })(t, It(t))
-                                })(c))
-                              : (!Ft(c) || (r && $t(c))) &&
+                                })(u))
+                              : (!kt(u) || (r && $t(u))) &&
                                 (f = (function(t) {
                                   return 'function' != typeof t.constructor ||
                                     Ot(t)
                                     ? {}
-                                    : rt(V(t))
-                                })(u)))
+                                    : rt(W(t))
+                                })(c)))
                           : (s = !1)
                     }
-                    var _, y, b, g
+                    var y, _, g, b
                     var m
-                    s && (a.set(u, f), o(f, u, r, i, a), a.delete(u))
+                    s && (a.set(c, f), o(f, c, r, i, a), a.delete(c))
                     lt(t, n, f)
-                  })(t, e, a, n, gt, r, o)
+                  })(t, e, a, n, bt, r, o)
               else {
-                var c = r ? r(S(t, a), i, a + '', t, e, o) : void 0
-                void 0 === c && (c = i), lt(t, a, c)
+                var u = r ? r(S(t, a), i, a + '', t, e, o) : void 0
+                void 0 === u && (u = i), lt(t, a, u)
               }
             },
             It
@@ -473,9 +495,9 @@ var badgin = (function(t) {
                 )
                   a[o] = r[e + o]
                 o = -1
-                for (var c = Array(e + 1); ++o < e; ) c[o] = r[o]
+                for (var u = Array(e + 1); ++o < e; ) u[o] = r[o]
                 return (
-                  (c[e] = n(a)),
+                  (u[e] = n(a)),
                   (function(t, e, n) {
                     switch (n.length) {
                       case 0:
@@ -488,7 +510,7 @@ var badgin = (function(t) {
                         return t.call(e, n[0], n[1], n[2])
                     }
                     return t.apply(e, n)
-                  })(t, this, c)
+                  })(t, this, u)
                 )
               }
             )
@@ -513,13 +535,13 @@ var badgin = (function(t) {
         var n = (function(t, e) {
           return null == t ? void 0 : t[e]
         })(t, e)
-        return yt(n) ? n : void 0
+        return _t(n) ? n : void 0
       }
       function At(t, e) {
         var n = typeof t
         return (
-          !!(e = null == e ? c : e) &&
-          ('number' == n || ('symbol' != n && y.test(t))) &&
+          !!(e = null == e ? u : e) &&
+          ('number' == n || ('symbol' != n && _.test(t))) &&
           t > -1 &&
           t % 1 == 0 &&
           t < e
@@ -527,16 +549,16 @@ var badgin = (function(t) {
       }
       function Ot(t) {
         var e = t && t.constructor
-        return t === (('function' == typeof e && e.prototype) || P)
+        return t === (('function' == typeof e && e.prototype) || F)
       }
       var zt = (function(t) {
         var e = 0,
           n = 0
         return function() {
           var r = tt(),
-            o = a - (r - n)
-          if (((n = r), o > 0)) {
-            if (++e >= i) return arguments[0]
+            a = i - (r - n)
+          if (((n = r), a > 0)) {
+            if (++e >= o) return arguments[0]
           } else e = 0
           return t.apply(void 0, arguments)
         }
@@ -559,18 +581,18 @@ var badgin = (function(t) {
       function xt(t, e) {
         return t === e || (t != t && e != e)
       }
-      var Tt = _t(
+      var Tt = yt(
           (function() {
             return arguments
           })()
         )
-          ? _t
+          ? yt
           : function(t) {
-              return Pt(t) && N.call(t, 'callee') && !J.call(t, 'callee')
+              return Ft(t) && N.call(t, 'callee') && !H.call(t, 'callee')
             },
         St = Array.isArray
       function Bt(t) {
-        return null != t && kt(t.length) && !$t(t)
+        return null != t && Pt(t.length) && !$t(t)
       }
       var Et =
         Y ||
@@ -578,18 +600,18 @@ var badgin = (function(t) {
           return !1
         }
       function $t(t) {
-        if (!Ft(t)) return !1
+        if (!kt(t)) return !1
         var e = vt(t)
         return e == f || e == s || e == l || e == p
       }
-      function kt(t) {
-        return 'number' == typeof t && t > -1 && t % 1 == 0 && t <= c
+      function Pt(t) {
+        return 'number' == typeof t && t > -1 && t % 1 == 0 && t <= u
       }
-      function Ft(t) {
+      function kt(t) {
         var e = typeof t
         return null != t && ('object' == e || 'function' == e)
       }
-      function Pt(t) {
+      function Ft(t) {
         return null != t && 'object' == typeof t
       }
       var Ct = T
@@ -599,14 +621,14 @@ var badgin = (function(t) {
             }
           })(T)
         : function(t) {
-            return Pt(t) && kt(t.length) && !!b[vt(t)]
+            return Ft(t) && Pt(t.length) && !!g[vt(t)]
           }
       function It(t) {
-        return Bt(t) ? ut(t, !0) : bt(t)
+        return Bt(t) ? ct(t, !0) : gt(t)
       }
       var Nt,
         Ut = ((Nt = function(t, e, n) {
-          gt(t, e, n)
+          bt(t, e, n)
         }),
         mt(function(t, e) {
           var n = -1,
@@ -617,7 +639,7 @@ var badgin = (function(t) {
             o = Nt.length > 3 && 'function' == typeof o ? (r--, o) : void 0,
               i &&
                 (function(t, e, n) {
-                  if (!Ft(n)) return !1
+                  if (!kt(n)) return !1
                   var r = typeof e
                   return (
                     !!('number' == r
@@ -639,29 +661,15 @@ var badgin = (function(t) {
         return t
       }
       t.exports = Ut
-    })((n = { exports: {} }), n.exports),
-    n.exports)
-  let o = !1
-  const i = () => {
-    o ||
-      (console.warn(
-        'Application must run in standalone mode and Badging API must be enabled. Please check here how you can enable it: https://developers.google.com/web/updates/2018/12/badging-api#use'
-      ),
-      (o = !0))
+    })((u = { exports: {} }), u.exports),
+    u.exports)
+  function l(t) {
+    return !!t && Number.isInteger(t) && t >= 0
   }
-  function a() {
-    return (
-      window.matchMedia('(display-mode: standalone)').matches &&
-      'ExperimentalBadge' in window
-    )
-  }
-  function c(t) {
-    return t && Number.isInteger(t) && t >= 0
-  }
-  function u(t) {
+  function f(t) {
     return void 0 === t || !Number.isInteger(t)
   }
-  const l = () => {
+  const s = () => {
       const t = document.getElementsByTagName('link')
       for (let e = 0; e < t.length; e++) {
         const n = t[e]
@@ -673,120 +681,140 @@ var badgin = (function(t) {
       }
       return null
     },
-    f = Math.ceil(window.devicePixelRatio) || 1,
-    s = 16 * f
-  let d = null,
-    h = null,
-    p = null,
-    v = null,
-    _ = () => {
-      ;(d = l()),
-        (h = document.createElement('img')),
-        ((p = document.createElement('canvas')).width = s),
-        (p.height = s),
-        (v = p.getContext ? p.getContext('2d') : null),
-        (_ = () => {})
+    d = Math.ceil(window.devicePixelRatio) || 1,
+    h = 16 * d,
+    p = {
+      favicon: null,
+      value: null,
+      options: {
+        fontSize: 8 * d,
+        fontFamily: 'Arial',
+        background: '#424242',
+        color: '#ffffff',
+        height: 8,
+        width: 7,
+        opacity: 1,
+        indicator: '!',
+      },
     }
-  const y = {
-      fontSize: 8 * f,
-      fontFamily: 'Arial',
-      background: '#424242',
-      color: '#ffffff',
-      height: 8,
-      width: 7,
-      opacity: 1,
-    },
-    b = t => {
+  let v = null,
+    y = null,
+    _ = null,
+    g = null
+  const b = t => {
       if (!t) return
-      let e = l()
-      for (; e && e.parentNode; ) e.parentNode.removeChild(e), (e = l())
+      let e = s()
+      for (; e && e.parentNode; ) e.parentNode.removeChild(e), (e = s())
       const n = document.createElement('link')
       ;(n.type = 'image/x-icon'),
         (n.rel = 'icon'),
         (n.href = t),
         document.getElementsByTagName('head')[0].appendChild(n)
     },
-    g = (t, e) => {
-      h &&
-        ((h.onload = () => {
-          h &&
-            p &&
-            (v.clearRect(0, 0, s, s),
-            v.drawImage(h, 0, 0, h.width, h.height, 0, 0, s, s),
-            m(v, t, e),
-            b(p.toDataURL()))
+    m = (t, e) => {
+      y &&
+        ((y.onload = () => {
+          y &&
+            _ &&
+            (g.clearRect(0, 0, h, h),
+            g.drawImage(y, 0, 0, y.width, y.height, 0, 0, h, h),
+            j(g, t, e),
+            b(_.toDataURL()))
         }),
-        d &&
-          (d.href.match(/^data/) || (h.crossOrigin = 'anonymous'),
-          (h.src = d.href)))
+        v &&
+          (v.href.match(/^data/) || (y.crossOrigin = 'anonymous'),
+          (y.src = v.href)))
     },
-    m = (t, e, n) => {
-      const r = u(e) ? ' ' : c(e) ? String(e) : null
-      if (null === r) return
+    j = (t, e, n) => {
+      let r = null
+      if (
+        (f(e) ? (r = n.indicator) : l(e) && (r = e < 100 ? String(e) : '99+'),
+        null === r)
+      )
+        return
       const o = r.length - 1,
-        i = n.width * f + 4 * f * o,
-        a = n.height * f,
-        l = s - a,
-        d = s - i - f,
-        h = 16 * f,
-        p = 16 * f,
-        v = 5 * f
+        i = n.width * d + 4 * d * o,
+        a = n.height * d,
+        u = h - a,
+        c = h - i - d,
+        s = 16 * d,
+        p = 16 * d,
+        v = 5 * d,
+        y = c + i / 2 + 1
       t.save(),
         (t.globalAlpha = n.opacity),
-        (t.font = `${n.fontSize}px ${n.fontFamily}`),
         (t.fillStyle = n.background),
         (t.strokeStyle = n.background),
-        (t.lineWidth = f),
+        (t.lineWidth = d),
         t.beginPath(),
-        t.moveTo(d + v, l),
-        t.quadraticCurveTo(d, l, d, l + v),
-        t.lineTo(d, h - v),
-        t.quadraticCurveTo(d, h, d + v, h),
-        t.lineTo(p - v, h),
-        t.quadraticCurveTo(p, h, p, h - v),
-        t.lineTo(p, l + v),
-        t.quadraticCurveTo(p, l, p - v, l),
+        t.moveTo(c + v, u),
+        t.quadraticCurveTo(c, u, c, u + v),
+        t.lineTo(c, s - v),
+        t.quadraticCurveTo(c, s, c + v, s),
+        t.lineTo(p - v, s),
+        t.quadraticCurveTo(p, s, p, s - v),
+        t.lineTo(p, u + v),
+        t.quadraticCurveTo(p, u, p - v, u),
         t.closePath(),
         t.fill(),
+        t.restore(),
+        t.save(),
+        (t.font = `${n.fontSize}px ${n.fontFamily}`),
         (t.fillStyle = n.color),
-        (t.textAlign = 'right'),
+        (t.textAlign = 'center'),
         (t.textBaseline = 'top'),
-        t.fillText(r, 2 === f ? 29 : 15, 9 * f),
+        t.fillText(r, y, 9 * d),
         t.restore()
     }
-  let j = ''
-  const w = { indicator: '!' }
-  const A = () => ({
-    method: a() ? 'Badging' : (_(), v && d ? 'Favicon' : 'Title'),
-    favicon: y,
-    title: w,
-  })
+  function w() {
+    return (
+      v ||
+        ((v = s()),
+        (y = document.createElement('img')),
+        ((_ = document.createElement('canvas')).width = h),
+        (_.height = h),
+        (g = _.getContext ? _.getContext('2d') : null)),
+      !!g && !!v
+    )
+  }
+  const A = { title: null, value: null, options: { indicator: '!' } }
+  function O(t, e) {
+    null === A.title &&
+      ((A.title = document.title),
+      Object.defineProperty(document, 'title', {
+        get: () => A.title,
+        set: t => {
+          console.log('change'),
+            (A.title = t),
+            (function(t, e, n) {
+              let r = t
+              f(e) ? (r = `(${n.indicator}) ${t}`) : l(e) && (r = `(${e}) ${t}`)
+              const o = document.querySelector('title')
+              o && (o.childNodes[0].nodeValue = r)
+            })(A.title, A.value, A.options)
+        },
+      })),
+      (A.value = t),
+      c(A.options, e),
+      (document.title = document.title)
+  }
   return (
     (t.clear = function() {
-      a() ? window.ExperimentalBadge.clear() : i(),
-        b(d.href),
-        (document.title = j)
+      o() && window.ExperimentalBadge.clear(),
+        w() && b(v.href),
+        (A.value = null),
+        (document.title = document.title)
     }),
-    (t.set = function(t, e = A()) {
-      const n = r({}, A(), e)
-      switch (n.method) {
+    (t.set = function(t, e = {}) {
+      switch (e.method || (o() ? 'Badging' : w() ? 'Favicon' : 'Title')) {
         case 'Badging':
-          return void (function(t) {
-            a() ? window.ExperimentalBadge.set(t) : i()
-          })(t)
+          return void i(t)
         case 'Favicon':
           return void (function(t, e) {
-            g(t, e)
-          })(t, n.favicon)
+            w() && (c(p.options, e), m(t, p.options))
+          })(t, e.favicon)
         default:
-          !(function(t, e) {
-            j || (j = document.title),
-              u(t)
-                ? (document.title = `(${e.indicator}) ${j}`)
-                : c(t)
-                ? (document.title = `(${t}) ${j}`)
-                : (document.title = j)
-          })(t, n.title)
+          O(t, e.title)
       }
     }),
     t
