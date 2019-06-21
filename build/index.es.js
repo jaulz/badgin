@@ -151,7 +151,6 @@ const drawBubble = (context, value, options) => {
   const bottom = 16 * ratio
   const right = 16 * ratio
   const radius = 5 * ratio
-  const center = left + width / 2 + 1
   // Bubble
   context.save()
   context.globalAlpha = 1
@@ -176,7 +175,7 @@ const drawBubble = (context, value, options) => {
   context.fillStyle = options.color
   context.textAlign = 'center'
   context.textBaseline = 'top'
-  context.fillText(finalValue, center, 9 * ratio)
+  context.fillText(finalValue, left + width / 2 + 1, 9 * ratio + 1)
   context.restore()
 }
 function isAvailable$1() {

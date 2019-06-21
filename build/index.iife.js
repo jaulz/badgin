@@ -731,8 +731,7 @@ var badgin = (function(t) {
         u = h - i - d,
         c = 16 * d,
         s = 16 * d,
-        p = 5 * d,
-        v = u + i / 2 + 1
+        p = 5 * d
       t.save(),
         (t.globalAlpha = 1),
         (t.fillStyle = n.backgroundColor),
@@ -755,7 +754,7 @@ var badgin = (function(t) {
         (t.fillStyle = n.color),
         (t.textAlign = 'center'),
         (t.textBaseline = 'top'),
-        t.fillText(r, v, 9 * d),
+        t.fillText(r, u + i / 2 + 1, 9 * d + 1),
         t.restore()
     }
   function w() {
