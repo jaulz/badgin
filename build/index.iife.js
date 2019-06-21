@@ -750,7 +750,7 @@ var badgin = (function(t) {
         t.fill(),
         t.restore(),
         t.save(),
-        (t.font = `${8 * d}px Arial`),
+        (t.font = `${7 * d}px Arial`),
         (t.fillStyle = n.color),
         (t.textAlign = 'center'),
         (t.textBaseline = 'top'),

@@ -179,7 +179,7 @@ const drawBubble = (context, value, options) => {
   context.restore()
   // Value
   context.save()
-  context.font = `${8 * ratio}px Arial`
+  context.font = `${7 * ratio}px Arial`
   context.fillStyle = options.color
   context.textAlign = 'center'
   context.textBaseline = 'top'
