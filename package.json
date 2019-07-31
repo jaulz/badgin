@@ -12,11 +12,10 @@
   "types": "build/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "start": "nps",
     "test": "jest --runInBand --coverage",
     "build": "rm -rf ./build/ && rollup -c",
     "wath": "concurrently --kill-others \"live-server\" \"rollup -cw\"",
-    "prepublishOnly": "yarn start build"
+    "prepublishOnly": "yarn run build"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
