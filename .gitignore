@@ -90,3 +90,4 @@ typings/
 # Custom
 .rpt2_cache
 .DS_Store
+build

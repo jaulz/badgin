@@ -1,9 +1,9 @@
 {
-  "name": "@approvals-cloud/badgin",
+  "name": "badgin",
   "version": "1.1.4",
   "description": "Badgin makes it easy to subtly notify the user that there is some new activity that might require their attention, or it can be used to indicate a small amount of information, such as an unread count.",
   "author": "Julian Hundeloh",
-  "homepage": "https://github.com/approvals-cloud/badgin",
+  "homepage": "https://github.com/jaulz/badgin",
   "main": "build/index.js",
   "module": "build/index.es.js",
   "files": [
@@ -14,11 +14,13 @@
   "scripts": {
     "test": "jest --runInBand --coverage",
     "build": "rm -rf ./build/ && rollup -c",
-    "wath": "concurrently --kill-others \"live-server\" \"rollup -cw\"",
-    "prepublishOnly": "yarn run build"
+    "watch": "concurrently --kill-others \"live-server\" \"rollup -cw\"",
+    "prepublishOnly": "yarn run ci",
+    "ci": "yarn test && yarn build"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
+    "semantic-release": "^15.13.19",
     "concurrently": "^4.1.1",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^2.3.0",
