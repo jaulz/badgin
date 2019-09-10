@@ -12,11 +12,11 @@
   "types": "build/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "test": "jest --runInBand --coverage",
+    "test": "",
     "build": "rm -rf ./build/ && rollup -c",
     "watch": "concurrently --kill-others \"live-server\" \"rollup -cw\"",
     "prepublishOnly": "yarn run ci",
-    "ci": "yarn test && yarn build"
+    "ci": "yarn build"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
