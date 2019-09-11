@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
-    "semantic-release": "^15.13.19",
     "concurrently": "^4.1.1",
     "cz-conventional-changelog": "^2.1.0",
     "husky": "^2.3.0",
@@ -32,6 +31,7 @@
     "rollup-plugin-node-resolve": "^5.0.0",
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-typescript2": "^0.21.1",
+    "semantic-release": "^15.13.19",
     "typescript": "^3.4.5"
   },
   "config": {
