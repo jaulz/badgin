@@ -1,13 +1,21 @@
 import { Value } from './index'
 
+// The actual API can be tracked here: https://github.com/wicg/badging/
+// Most likely it will change to: navigator.setAppBadge and navigator.clearAppBadge
+
 let warnedBefore = false
 const warn = () => {
   if (warnedBefore) {
     return
   }
 
+  // We will only warn the user if the Badging API is not available at all
+  if ('ExperimentalBadge' in window) {
+    return
+  }
+
   console.warn(
-    'Application must run in standalone mode and Badging API must be enabled. Please check here how you can enable it: https://developers.google.com/web/updates/2018/12/badging-api#use'
+    'Badging API must be enabled. Please check here how you can enable it: https://developers.google.com/web/updates/2018/12/badging-api#use'
   )
   warnedBefore = true
 }
