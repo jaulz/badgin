@@ -1,21 +1,21 @@
-![](https://github.com/approvals-cloud/badgin/raw/master/assets/screenshots/standalone_osx.png)
+![](https://github.com/jaulz/badgin/raw/master/assets/screenshots/standalone_osx.png)
 
 The [Badging API](https://developers.google.com/web/updates/2018/12/badging-api) is a new web platform API that allows installed web apps to set an application-wide badge, shown in an operating-system-specific place associated with the application (such as the shelf or home screen). Starting in Chrome 73, the Badging API is available as an origin trial for Windows (7+) and macOS. If you want to know how origin trials work, please check [Google's documentation](https://developers.google.com/web/updates/2018/12/badging-api#use). Since this API is not available everywhere, `badgin` safely falls back to alternatives:
 
 ### via Favicon
 
-![](https://github.com/approvals-cloud/badgin/raw/master/assets/screenshots/favicon.png)
+![](https://github.com/jaulz/badgin/raw/master/assets/screenshots/favicon.png)
 
 ### via Title
 
-![](https://github.com/approvals-cloud/badgin/raw/master/assets/screenshots/title.png)
+![](https://github.com/jaulz/badgin/raw/master/assets/screenshots/title.png)
 
 ## Installation
 
 The module can be installed by running:
 
 ```
-yarn add --save /badgin
+yarn add --save badgin
 ```
 
 ## Usage
