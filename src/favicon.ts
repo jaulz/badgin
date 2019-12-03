@@ -1,4 +1,4 @@
-import merge from 'lodash.merge'
+import deepMerge from './deepMerge'
 import { Value } from './index'
 import isPositiveNumber from './isPositiveNumber'
 
@@ -200,7 +200,7 @@ export function isAvailable() {
 export function set(value: Value, options?: Partial<Options>) {
   // Remember options
   current.value = value
-  merge(current.options, options)
+  deepMerge(current.options, options || {})
 
   if (!isAvailable()) {
     return false
