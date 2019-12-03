@@ -1,7 +1,6 @@
 import merge from 'lodash.merge'
 import { Value } from './index'
 import isPositiveNumber from './isPositiveNumber'
-import isIndicator from './isIndicator'
 
 export type Options = {
   backgroundColor: string
@@ -42,7 +41,7 @@ export const defaultOptions: Options = {
 // References to the favicons that we need to track in order to reset and update the counters
 const current: { favicon: Favicon; value: Value; options: Options } = {
   favicon: null,
-  value: null,
+  value: 0,
   options: defaultOptions,
 }
 let original: Favicon = null
@@ -127,18 +126,22 @@ const drawBubble = (
   value: Value,
   options: Options
 ) => {
-  // Do we need to render the buble at all?
-  let finalValue = null
-  if (isIndicator(value)) {
-    finalValue = options.indicator
-  } else if (isPositiveNumber(value)) {
-    if (value < 100) {
+  // Do we need to render the bubble at all?
+  let finalValue: string = ''
+  if (isPositiveNumber(value)) {
+    if (value === 0) {
+      finalValue = ''
+    } else if (value < 100) {
       finalValue = String(value)
     } else {
       finalValue = '99+'
     }
+  } else {
+    finalValue = options.indicator
   }
-  if (finalValue === null) {
+
+  // Return early
+  if (!finalValue) {
     return
   }
 

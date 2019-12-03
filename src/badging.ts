@@ -1,7 +1,16 @@
 import { Value } from './index'
+import isPositiveNumber from './isPositiveNumber'
 
 // The actual API can be tracked here: https://github.com/wicg/badging/
 // Most likely it will change to: navigator.setAppBadge and navigator.clearAppBadge
+declare global {
+  interface Window {
+    ExperimentalBadge?: {
+      set: (value?: number) => void
+      clear: () => void
+    }
+  }
+}
 
 let warnedBefore = false
 const warn = () => {
@@ -22,7 +31,7 @@ const warn = () => {
 
 const current: { mediaQuery: MediaQueryList | null; value: Value } = {
   mediaQuery: null,
-  value: null,
+  value: 0,
 }
 
 export function isAvailable() {
@@ -35,7 +44,11 @@ export function isAvailable() {
     }
   }
 
-  return current.mediaQuery.matches && 'ExperimentalBadge' in window
+  return (
+    current.mediaQuery.matches &&
+    'ExperimentalBadge' in window &&
+    !!window.ExperimentalBadge
+  )
 }
 
 export function set(value: Value) {
@@ -46,7 +59,9 @@ export function set(value: Value) {
     return false
   }
 
-  ;(<any>window).ExperimentalBadge.set(value)
+  // Sets the badge to contents (an integer), or to "flag" if contents is omitted. If contents is 0, clears the badge for the matching app(s).
+  // See details here: https://github.com/WICG/badging/blob/master/explainer.md#the-api
+  window.ExperimentalBadge!.set(value)
   return true
 }
 
@@ -55,5 +70,5 @@ export function clear() {
     return
   }
 
-  ;(<any>window).ExperimentalBadge.clear()
+  window.ExperimentalBadge!.clear()
 }

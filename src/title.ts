@@ -1,6 +1,5 @@
 import merge from 'lodash.merge'
 import { Value } from './index'
-import isIndicator from './isIndicator'
 import isPositiveNumber from './isPositiveNumber'
 
 export type Options = {
@@ -15,17 +14,21 @@ export const defaultOptions: Options = {
 
 const current: { title: Title; value: Value; options: Options } = {
   title: null,
-  value: null,
+  value: 0,
   options: defaultOptions,
 }
 
 export function changeTitle(title: Title, value: Value, options: Options) {
   let newTitle = title
 
-  if (isIndicator(value)) {
+  if (isPositiveNumber(value)) {
+    if (value === 0) {
+      newTitle = title
+    } else {
+      newTitle = `(${value}) ${title}`
+    }
+  } else {
     newTitle = `(${options.indicator}) ${title}`
-  } else if (isPositiveNumber(value)) {
-    newTitle = `(${value}) ${title}`
   }
 
   const element = document.querySelector('title')
@@ -44,7 +47,6 @@ export function set(value: Value, options?: Partial<Options>) {
         return current.title
       },
       set: title => {
-        console.log('change')
         current.title = title
         changeTitle(current.title, current.value, current.options)
       },
@@ -57,9 +59,13 @@ export function set(value: Value, options?: Partial<Options>) {
 
   // Trigger change
   document.title = document.title
+
+  return true
 }
 
 export function clear() {
-  current.value = null
+  current.value = 0
+
+  // Trigger change
   document.title = document.title
 }

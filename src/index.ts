@@ -2,7 +2,7 @@ import * as badging from './badging'
 import * as favicon from './favicon'
 import * as title from './title'
 
-export type Value = number | null | undefined
+export type Value = number | undefined
 
 export interface Interface {
   set: (value: Value) => void
