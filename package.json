@@ -51,7 +51,5 @@
       "pre-commit": "pretty-quick --staged --verbose"
     }
   },
-  "dependencies": {
-    "lodash.merge": "^4.6.1"
-  }
+  "dependencies": {}
 }
