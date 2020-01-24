@@ -1,14 +1,18 @@
 import { Value } from './index'
-import isPositiveNumber from './isPositiveNumber'
 
 // The actual API can be tracked here: https://github.com/wicg/badging/
-// Most likely it will change to: navigator.setAppBadge and navigator.clearAppBadge
+// Most likely it will eventually change to: navigator.setAppBadge and navigator.clearAppBadge
 declare global {
   interface Window {
     ExperimentalBadge?: {
       set: (value?: number) => void
       clear: () => void
     }
+  }
+
+  interface Navigator {
+    setExperimentalAppBadge?: (value?: number) => void
+    clearExperimentalAppBadge?: () => void
   }
 }
 
@@ -19,7 +23,7 @@ const warn = () => {
   }
 
   // We will only warn the user if the Badging API is not available at all
-  if ('ExperimentalBadge' in window) {
+  if ('ExperimentalBadge' in window || 'setExperimentalAppBadge' in navigator) {
     return
   }
 
@@ -34,6 +38,19 @@ const current: { mediaQuery: MediaQueryList | null; value: Value } = {
   value: 0,
 }
 
+function isVersion1Available() {
+  return 'ExperimentalBadge' in window && !!window.ExperimentalBadge
+}
+
+function isVersion2Available() {
+  return (
+    'setExperimentalAppBadge' in navigator &&
+    !!navigator.setExperimentalAppBadge &&
+    'clearExperimentalAppBadge' in navigator &&
+    !!navigator.clearExperimentalAppBadge
+  )
+}
+
 export function isAvailable() {
   if (!current.mediaQuery) {
     current.mediaQuery = window.matchMedia('(display-mode: standalone)')
@@ -46,8 +63,7 @@ export function isAvailable() {
 
   return (
     current.mediaQuery.matches &&
-    'ExperimentalBadge' in window &&
-    !!window.ExperimentalBadge
+    (isVersion1Available() || isVersion2Available())
   )
 }
 
@@ -61,8 +77,15 @@ export function set(value: Value) {
 
   // Sets the badge to contents (an integer), or to "flag" if contents is omitted. If contents is 0, clears the badge for the matching app(s).
   // See details here: https://github.com/WICG/badging/blob/master/explainer.md#the-api
-  window.ExperimentalBadge!.set(value)
-  return true
+  if (isVersion1Available()) {
+    window.ExperimentalBadge!.set(value)
+    return true
+  } else if (isVersion2Available()) {
+    navigator.setExperimentalAppBadge!(value)
+    return true
+  }
+
+  return false
 }
 
 export function clear() {
@@ -70,5 +93,9 @@ export function clear() {
     return
   }
 
-  window.ExperimentalBadge!.clear()
+  if (isVersion1Available()) {
+    window.ExperimentalBadge!.clear()
+  } else if (isVersion2Available()) {
+    navigator.clearExperimentalAppBadge!()
+  }
 }
