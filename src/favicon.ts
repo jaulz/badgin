@@ -48,17 +48,7 @@ const getBestFavicon = (): BestFavicon => {
 
   for (let i = 0; i < favicons.length; i++) {
     const favicon = favicons[i]
-    const href = favicon.getAttribute('href')
-    const rel = favicon.getAttribute('rel')
     const sizes = favicon.getAttribute('sizes')
-
-    if (!href) {
-      continue
-    }
-
-    if (!rel || rel.split(' ').indexOf('icon') === -1) {
-      continue
-    }
 
     // If the link does not have a "sizes" attribute, we use it only if we haven't found anything else yet
     if (!sizes) {
