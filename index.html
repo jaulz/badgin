@@ -14,6 +14,7 @@
       href="./assets/favicon-16x16.png"
     />
     <link rel="icon" href="./assets/favicon.ico" />
+
     <title>badgin Demo</title>
     <!-- Renew at https://developers.chrome.com/origintrials/#/trials/my latest by 16 Sep 2020 -->
     <meta
@@ -26,7 +27,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"
     />
-    <script src="/build/index.iife.js"></script>
+
     <style>
       @media (display-mode: standalone) {
         #requiresStandalone {
@@ -168,6 +169,8 @@
     </style>
 
     <script>
+      const isLocalhost =
+        location.hostname === 'localhost' || location.hostname === '127.0.0.1'
       let value = 0
       const options = {
         favicon: {},
@@ -218,11 +221,19 @@
       })
 
       // Add service worker
-      if ('serviceWorker' in navigator) {
+      if (!isLocalhost && 'serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').then(() => {
           console.log('Service Worker Registered')
         })
       }
+
+      // Load script
+      const script = document.createElement('script')
+      script.src = isLocalhost
+        ? '/build/index.iife.js'
+        : 'https://unpkg.com/badgin/build/index.iife.js'
+
+      document.head.appendChild(script)
     </script>
   </body>
 </html>
