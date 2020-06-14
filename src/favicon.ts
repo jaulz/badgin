@@ -99,20 +99,22 @@ export const defaultOptions: Options = {
 
 // References to the favicons that we need to track in order to reset and update the counters
 const current: {
+  canvas: HTMLCanvasElement | null
+  context: CanvasRenderingContext2D | null
   favicons: Favicon[] | null
   bestFavicon: BestFavicon
+  bestFaviconImage: HTMLImageElement | null
   value: Value
   options: Options
 } = {
+  canvas: null,
+  context: null,
   favicons: null,
   bestFavicon: null,
+  bestFaviconImage: null,
   value: 0,
   options: defaultOptions,
 }
-
-// Setup the source canvas element which we use to generate the favicon's data-url's from
-let canvas: HTMLCanvasElement | null = null
-let context: CanvasRenderingContext2D | null = null
 
 // Update favicon
 const setFavicon = (url: string) => {
@@ -138,33 +140,36 @@ const setFavicon = (url: string) => {
 }
 
 // Draw the favicon
-const drawFavicon = (value: Value, options: Options) => {
-  const image = document.createElement('img')
-  image.onload = () => {
-    if (!canvas) {
-      return
-    }
-
-    // Draw image in canvas
-    context!.clearRect(0, 0, size, size)
-    context!.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size)
-
-    // Draw bubble over the top
-    drawBubble(context!, value, options)
-
-    // Refresh tag in page
-    setFavicon(canvas.toDataURL())
+const drawFavicon = (
+  image: HTMLImageElement,
+  value: Value,
+  options: Options
+) => {
+  if (!current.canvas || !current.context) {
+    return
   }
 
-  // Load image of best favicon so we can manipulate it
-  if (current.bestFavicon) {
-    // Allow cross origin resource requests if the image is not a data:uri
-    if (!current.bestFavicon.href.match(/^data/)) {
-      image.crossOrigin = 'anonymous'
-    }
+  // Clear old canvas
+  current.context.clearRect(0, 0, size, size)
 
-    image.src = current.bestFavicon.href
-  }
+  // Draw new image
+  current.context.drawImage(
+    image,
+    0,
+    0,
+    image.width,
+    image.height,
+    0,
+    0,
+    size,
+    size
+  )
+
+  // Draw bubble on the top
+  drawBubble(current.context, value, options)
+
+  // Refresh tag in page
+  setFavicon(current.canvas.toDataURL())
 }
 
 // Draws the bubble on the canvas
@@ -232,14 +237,16 @@ const drawBubble = (
 }
 
 export function isAvailable() {
-  if (!context) {
-    canvas = document.createElement('canvas')
+  if (!current.context) {
+    const canvas = document.createElement('canvas')
     canvas.width = size
     canvas.height = size
-    context = canvas.getContext ? canvas.getContext('2d') : null
+
+    current.canvas = canvas
+    current.context = canvas.getContext ? canvas.getContext('2d') : null
   }
 
-  return !!context && !!getBestFavicon()
+  return !!current.context && !!getBestFavicon()
 }
 
 export function set(value: Value, options?: Partial<Options>) {
@@ -252,11 +259,47 @@ export function set(value: Value, options?: Partial<Options>) {
   }
 
   // Remember favicons
-  current.bestFavicon = current.bestFavicon || getBestFavicon()
-  current.favicons = current.favicons || getFavicons()
+  if (!current.bestFavicon) {
+    const bestFavicon = getBestFavicon()
+
+    if (bestFavicon) {
+      const bestFaviconImage = document.createElement('img')
+      bestFaviconImage.width = size
+      bestFaviconImage.height = size
+
+      // Allow cross origin resource requests if the image is not a data:uri
+      if (!bestFavicon.href.match(/^data/)) {
+        bestFaviconImage.crossOrigin = 'anonymous'
+      }
+
+      // Load image
+      bestFaviconImage.src = bestFavicon.href
+
+      // Store for next time
+      current.bestFavicon = bestFavicon
+      current.bestFaviconImage = bestFaviconImage
+    }
+  }
+  if (!current.favicons) {
+    current.favicons = getFavicons()
+  }
 
   // Draw icon
-  drawFavicon(current.value, current.options)
+  if (!current.bestFaviconImage) {
+    return false
+  }
+
+  // If we have the image, we can draw immediately
+  if (current.bestFaviconImage.complete) {
+    drawFavicon(current.bestFaviconImage, current.value, current.options)
+    return true
+  }
+
+  // Otherwise we will wait for the load event
+  current.bestFaviconImage.addEventListener('load', function() {
+    drawFavicon(this, current.value, current.options)
+  })
+
   return true
 }
 
@@ -279,5 +322,6 @@ export function clear() {
     }
     current.favicons = null
     current.bestFavicon = null
+    current.bestFaviconImage = null
   }
 }
