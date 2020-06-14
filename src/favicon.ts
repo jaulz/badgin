@@ -322,5 +322,6 @@ export function clear() {
     }
     current.favicons = null
     current.bestFavicon = null
+    current.bestFaviconImage = null
   }
 }
