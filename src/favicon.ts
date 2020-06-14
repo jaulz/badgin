@@ -8,23 +8,92 @@ export type Options = {
   indicator: string
 }
 
-type Favicon = HTMLLinkElement | null
+type Favicon = HTMLLinkElement
 
-// Get the current favicon of the document
-const getFavicon = (): Favicon => {
-  const links = document.getElementsByTagName('link')
+type BestFavicon = Favicon | null
+
+// Get all favicons of the page
+const getFavicons = (): Favicon[] => {
+  const links = document.head.getElementsByTagName('link')
+  const favicons: Favicon[] = []
 
   for (let i = 0; i < links.length; i++) {
     const link = links[i]
-    if (
-      link.hasAttribute('href') &&
-      (link.getAttribute('rel') || '').match(/\bicon\b/)
-    ) {
-      return link
+    const href = link.getAttribute('href')
+    const rel = link.getAttribute('rel')
+
+    if (!href) {
+      continue
+    }
+
+    if (!rel) {
+      continue
+    }
+
+    if (rel.split(' ').indexOf('icon') === -1) {
+      continue
+    }
+
+    favicons.push(link)
+  }
+
+  return favicons
+}
+
+// Get the favicon with the best quality of the document
+const getBestFavicon = (): BestFavicon => {
+  const favicons = getFavicons()
+  let bestFavicon: BestFavicon = null
+  let bestSize = 0
+
+  for (let i = 0; i < favicons.length; i++) {
+    const favicon = favicons[i]
+    const href = favicon.getAttribute('href')
+    const rel = favicon.getAttribute('rel')
+    const sizes = favicon.getAttribute('sizes')
+
+    if (!href) {
+      continue
+    }
+
+    if (!rel || rel.split(' ').indexOf('icon') === -1) {
+      continue
+    }
+
+    // If the link does not have a "sizes" attribute, we use it only if we haven't found anything else yet
+    if (!sizes) {
+      if (!bestFavicon) {
+        bestFavicon = favicon
+        bestSize = 0
+      }
+
+      continue
+    }
+
+    // If we find an icon with sizes "any", it's the best we can get
+    if (sizes === 'any') {
+      return favicon
+    }
+
+    // Otherwise we will try to find the maximum size
+    const size = parseInt(sizes.split('x')[0], 10)
+    if (Number.isNaN(size)) {
+      if (!bestFavicon) {
+        bestFavicon = favicon
+        bestSize = 0
+      }
+
+      continue
+    }
+
+    if (size > bestSize) {
+      bestFavicon = favicon
+      bestSize = size
+      continue
     }
   }
 
-  return null
+  return bestFavicon
 }
 
 // Calculate the size of the font and canvas element based on device's ratio
@@ -39,62 +108,50 @@ export const defaultOptions: Options = {
 }
 
 // References to the favicons that we need to track in order to reset and update the counters
-const current: { favicon: Favicon; value: Value; options: Options } = {
-  favicon: null,
+const current: {
+  favicons: Favicon[] | null
+  bestFavicon: BestFavicon
+  value: Value
+  options: Options
+} = {
+  favicons: null,
+  bestFavicon: null,
   value: 0,
   options: defaultOptions,
 }
-let original: Favicon = null
-let image: HTMLImageElement | null = null
 
 // Setup the source canvas element which we use to generate the favicon's data-url's from
 let canvas: HTMLCanvasElement | null = null
 let context: CanvasRenderingContext2D | null = null
 
-// Initialize
-const initialize = () => {
-  if (current.favicon) {
-    return
-  }
-
-  current.favicon = getFavicon()
-  image = document.createElement('img')
-  canvas = document.createElement('canvas')
-  canvas.width = size
-  canvas.height = size
-  context = canvas.getContext ? canvas.getContext('2d') : null
-}
-
-// Update the favicon
+// Update favicon
 const setFavicon = (url: string) => {
   if (!url) {
     return
   }
 
-  // Remove the old favicon tags
-  let tag = getFavicon()
-  while (tag && tag.parentNode) {
-    tag.parentNode.removeChild(tag)
-    tag = getFavicon()
+  // Remove previous favicons
+  for (const favicon of getFavicons()) {
+    if (favicon.parentNode) {
+      favicon.parentNode.removeChild(favicon)
+    }
   }
 
   // Create new favicon
-  const link = document.createElement('link')
-  link.type = 'image/x-icon'
-  link.rel = 'icon'
-  link.href = url
+  const newFavicon = document.createElement('link')
+  newFavicon.id = 'badgin'
+  newFavicon.type = 'image/x-icon'
+  newFavicon.rel = 'icon'
+  newFavicon.href = url
 
-  document.getElementsByTagName('head')[0].appendChild(link)
+  document.getElementsByTagName('head')[0].appendChild(newFavicon)
 }
 
 // Draw the favicon
 const drawFavicon = (value: Value, options: Options) => {
-  if (!image) {
-    return
-  }
-
+  const image = document.createElement('img')
   image.onload = () => {
-    if (!image || !canvas) {
+    if (!canvas) {
       return
     }
 
@@ -109,14 +166,14 @@ const drawFavicon = (value: Value, options: Options) => {
     setFavicon(canvas.toDataURL())
   }
 
-  // Reload image
-  if (original) {
+  // Load image of best favicon so we can manipulate it
+  if (current.bestFavicon) {
     // Allow cross origin resource requests if the image is not a data:uri
-    if (!original.href.match(/^data/)) {
+    if (!current.bestFavicon.href.match(/^data/)) {
       image.crossOrigin = 'anonymous'
     }
 
-    image.src = original.href
+    image.src = current.bestFavicon.href
   }
 }
 
@@ -185,16 +242,14 @@ const drawBubble = (
 }
 
 export function isAvailable() {
-  if (!original) {
-    original = getFavicon()
-    image = document.createElement('img')
+  if (!context) {
     canvas = document.createElement('canvas')
     canvas.width = size
     canvas.height = size
     context = canvas.getContext ? canvas.getContext('2d') : null
   }
 
-  return !!context && !!original
+  return !!context && !!getBestFavicon()
 }
 
 export function set(value: Value, options?: Partial<Options>) {
@@ -206,6 +261,10 @@ export function set(value: Value, options?: Partial<Options>) {
     return false
   }
 
+  // Remember favicons
+  current.bestFavicon = current.bestFavicon || getBestFavicon()
+  current.favicons = current.favicons || getFavicons()
+
   // Draw icon
   drawFavicon(current.value, current.options)
   return true
@@ -216,5 +275,19 @@ export function clear() {
     return
   }
 
-  setFavicon(original!.href)
+  if (current.favicons) {
+    // Remove current favicons
+    for (const favicon of getFavicons()) {
+      if (favicon.parentNode) {
+        favicon.parentNode.removeChild(favicon)
+      }
+    }
+
+    // Recreate old favicons
+    for (const favicon of current.favicons) {
+      document.head.appendChild(favicon)
+    }
+    current.favicons = null
+    current.bestFavicon = null
+  }
 }
