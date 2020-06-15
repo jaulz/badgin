@@ -86,10 +86,6 @@ const getBestFavicon = (): BestFavicon => {
   return bestFavicon
 }
 
-// Calculate the size of the font and canvas element based on device's ratio
-const ratio = Math.ceil(window.devicePixelRatio) || 1
-const size = 16 * ratio
-
 // Options
 export const defaultOptions: Options = {
   backgroundColor: '#424242',
@@ -99,21 +95,25 @@ export const defaultOptions: Options = {
 
 // References to the favicons that we need to track in order to reset and update the counters
 const current: {
-  canvas: HTMLCanvasElement | null
-  context: CanvasRenderingContext2D | null
   favicons: Favicon[] | null
   bestFavicon: BestFavicon
   bestFaviconImage: HTMLImageElement | null
   value: Value
   options: Options
 } = {
-  canvas: null,
-  context: null,
   favicons: null,
   bestFavicon: null,
   bestFaviconImage: null,
   value: 0,
   options: defaultOptions,
+}
+
+// Get size depending on screen density
+const getRatio = () => {
+  return Math.ceil(window.devicePixelRatio) || 1
+}
+const getSize = () => {
+  return 16 * getRatio()
 }
 
 // Update favicon
@@ -145,31 +145,23 @@ const drawFavicon = (
   value: Value,
   options: Options
 ) => {
-  if (!current.canvas || !current.context) {
+  const size = getSize()
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const context = canvas.getContext('2d')
+  if (!context) {
     return
   }
 
-  // Clear old canvas
-  current.context.clearRect(0, 0, size, size)
-
   // Draw new image
-  current.context.drawImage(
-    image,
-    0,
-    0,
-    image.width,
-    image.height,
-    0,
-    0,
-    size,
-    size
-  )
+  context.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size)
 
   // Draw bubble on the top
-  drawBubble(current.context, value, options)
+  drawBubble(context, value, options)
 
   // Refresh tag in page
-  setFavicon(current.canvas.toDataURL())
+  setFavicon(canvas.toDataURL())
 }
 
 // Draws the bubble on the canvas
@@ -198,6 +190,8 @@ const drawBubble = (
   }
 
   // Calculate position etc.
+  const size = getSize()
+  const ratio = getRatio()
   const length = finalValue.length - 1
   const width = 8 * ratio + 4 * ratio * length
   const height = 7 * ratio
@@ -237,16 +231,7 @@ const drawBubble = (
 }
 
 export function isAvailable() {
-  if (!current.context) {
-    const canvas = document.createElement('canvas')
-    canvas.width = size
-    canvas.height = size
-
-    current.canvas = canvas
-    current.context = canvas.getContext ? canvas.getContext('2d') : null
-  }
-
-  return !!current.context && !!getBestFavicon()
+  return !!getBestFavicon()
 }
 
 export function set(value: Value, options?: Partial<Options>) {
@@ -263,6 +248,7 @@ export function set(value: Value, options?: Partial<Options>) {
     const bestFavicon = getBestFavicon()
 
     if (bestFavicon) {
+      const size = getSize()
       const bestFaviconImage = document.createElement('img')
       bestFaviconImage.width = size
       bestFaviconImage.height = size
