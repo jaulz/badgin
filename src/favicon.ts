@@ -133,7 +133,7 @@ const setFavicon = (url: string) => {
   const newFavicon = document.createElement('link')
   newFavicon.id = 'badgin'
   newFavicon.type = 'image/x-icon'
-  newFavicon.rel = 'icon'
+  newFavicon.rel = 'icon favicon'
   newFavicon.href = url
 
   document.getElementsByTagName('head')[0].appendChild(newFavicon)
