@@ -12,6 +12,14 @@ type Favicon = HTMLLinkElement
 
 type BestFavicon = Favicon | null
 
+export const DefaultValue: Value = 0
+
+export const DefaultOptions: Options = {
+  backgroundColor: '#424242',
+  color: '#ffffff',
+  indicator: '!',
+}
+
 // Get all favicons of the page
 const getFavicons = (): Favicon[] => {
   const links = document.head.getElementsByTagName('link')
@@ -86,34 +94,34 @@ const getBestFavicon = (): BestFavicon => {
   return bestFavicon
 }
 
-// Calculate the size of the font and canvas element based on device's ratio
-const ratio = Math.ceil(window.devicePixelRatio) || 1
-const size = 16 * ratio
-
-// Options
-export const defaultOptions: Options = {
-  backgroundColor: '#424242',
-  color: '#ffffff',
-  indicator: '!',
-}
-
 // References to the favicons that we need to track in order to reset and update the counters
 const current: {
-  canvas: HTMLCanvasElement | null
-  context: CanvasRenderingContext2D | null
   favicons: Favicon[] | null
   bestFavicon: BestFavicon
   bestFaviconImage: HTMLImageElement | null
   value: Value
   options: Options
 } = {
-  canvas: null,
-  context: null,
   favicons: null,
   bestFavicon: null,
   bestFaviconImage: null,
-  value: 0,
-  options: defaultOptions,
+  value: DefaultValue,
+  options: DefaultOptions,
+}
+
+// Get size depending on screen density
+const devicePixelRatioListener = window.matchMedia(
+  'screen and (min-resolution: 2dppx)'
+)
+const getRatio = () => {
+  return Math.ceil(window.devicePixelRatio) || 1
+}
+const handleRatioChange = () => {
+  console.log('handleRatioChange')
+  set(current.value, current.options)
+}
+const getSize = () => {
+  return 16 * getRatio()
 }
 
 // Update favicon
@@ -145,31 +153,25 @@ const drawFavicon = (
   value: Value,
   options: Options
 ) => {
-  if (!current.canvas || !current.context) {
+  const size = getSize()
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const context = canvas.getContext('2d')
+  if (!context) {
     return
   }
 
-  // Clear old canvas
-  current.context.clearRect(0, 0, size, size)
-
   // Draw new image
-  current.context.drawImage(
-    image,
-    0,
-    0,
-    image.width,
-    image.height,
-    0,
-    0,
-    size,
-    size
-  )
+  image.width = size
+  image.height = size
+  context.drawImage(image, 0, 0, image.width, image.height)
 
   // Draw bubble on the top
-  drawBubble(current.context, value, options)
+  drawBubble(context, value, options)
 
   // Refresh tag in page
-  setFavicon(current.canvas.toDataURL())
+  setFavicon(canvas.toDataURL())
 }
 
 // Draws the bubble on the canvas
@@ -198,14 +200,16 @@ const drawBubble = (
   }
 
   // Calculate position etc.
+  const size = getSize()
+  const ratio = getRatio()
   const length = finalValue.length - 1
-  const width = 8 * ratio + 4 * ratio * length
+  const width = Math.min(8 * ratio + 4 * ratio * length, size)
   const height = 7 * ratio
   const top = size - height
-  const left = size - width - ratio
+  const left = size - width
   const bottom = 16 * ratio
   const right = 16 * ratio
-  const radius = 5 * ratio
+  const radius = 3 * ratio
 
   // Bubble
   context.save()
@@ -232,21 +236,12 @@ const drawBubble = (
   context.fillStyle = options.color
   context.textAlign = 'center'
   context.textBaseline = 'top'
-  context.fillText(finalValue, left + width / 2 + 1, 9 * ratio + 1)
+  context.fillText(finalValue, left + width / 2, 9 * ratio + 1)
   context.restore()
 }
 
 export function isAvailable() {
-  if (!current.context) {
-    const canvas = document.createElement('canvas')
-    canvas.width = size
-    canvas.height = size
-
-    current.canvas = canvas
-    current.context = canvas.getContext ? canvas.getContext('2d') : null
-  }
-
-  return !!current.context && !!getBestFavicon()
+  return !!getBestFavicon()
 }
 
 export function set(value: Value, options?: Partial<Options>) {
@@ -264,8 +259,6 @@ export function set(value: Value, options?: Partial<Options>) {
 
     if (bestFavicon) {
       const bestFaviconImage = document.createElement('img')
-      bestFaviconImage.width = size
-      bestFaviconImage.height = size
 
       // Allow cross origin resource requests if the image is not a data:uri
       if (!bestFavicon.href.match(/^data/)) {
@@ -279,12 +272,15 @@ export function set(value: Value, options?: Partial<Options>) {
       current.bestFavicon = bestFavicon
       current.bestFaviconImage = bestFaviconImage
     }
+
+    // Once the device pixel ratio changes we set the value again
+    devicePixelRatioListener.addListener(handleRatioChange)
   }
   if (!current.favicons) {
     current.favicons = getFavicons()
   }
 
-  // Draw icon
+  // The image is required for setting the badge
   if (!current.bestFaviconImage) {
     return false
   }
@@ -307,6 +303,13 @@ export function clear() {
   if (!isAvailable()) {
     return
   }
+
+  // Reset value and options
+  current.value = DefaultValue
+  current.options = DefaultOptions
+
+  // Remove old listener
+  devicePixelRatioListener.removeListener(handleRatioChange)
 
   if (current.favicons) {
     // Remove current favicons
