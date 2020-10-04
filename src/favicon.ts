@@ -6,6 +6,7 @@ export type Options = {
   backgroundColor: string
   color: string
   indicator: string
+  radius: number
 }
 
 type Favicon = HTMLLinkElement
@@ -18,6 +19,7 @@ export const DefaultOptions: Options = {
   backgroundColor: '#424242',
   color: '#ffffff',
   indicator: '!',
+  radius: 3,
 }
 
 // Get all favicons of the page
@@ -209,7 +211,7 @@ const drawBubble = (
   const left = size - width
   const bottom = 16 * ratio
   const right = 16 * ratio
-  const radius = 3 * ratio
+  const radius = options.radius * ratio
 
   // Bubble
   context.save()
