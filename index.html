@@ -169,17 +169,29 @@
     </style>
 
     <script>
-      const isLocalhost =
-        location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      const isDevelopment =
+        location.hostname === 'localhost' ||
+        location.hostname === '127.0.0.1' ||
+        location.hostname.endsWith('codespaces.githubusercontent.com')
       let value = 0
       const options = {
-        favicon: {},
+        favicon: {
+          backgroundColor: '#000000',
+          color: '#FFFFFF',
+          indicator: '@',
+          radius: 3,
+          size: 7,
+          horizontalMargin: 1,
+          verticalMargin: 1,
+          horizontalPadding: 2,
+          verticalPadding: 2,
+        },
       }
 
       document.getElementById('set').addEventListener('click', () => {
         const value = document.getElementById('value').value
         localStorage.setItem('value', value)
-        badgin.set(value ? parseInt(value, 10) : value, options)
+        badgin.set(value ? parseInt(value, 10) : undefined, options)
       })
 
       document.getElementById('clear').addEventListener('click', () => {
@@ -223,7 +235,7 @@
       })
 
       // Add service worker
-      if (!isLocalhost && 'serviceWorker' in navigator) {
+      if (!isDevelopment && 'serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').then(() => {
           console.log('Service Worker Registered')
         })
@@ -231,7 +243,7 @@
 
       // Load script
       const script = document.createElement('script')
-      script.src = isLocalhost
+      script.src = isDevelopment
         ? '/build/index.iife.js'
         : 'https://unpkg.com/badgin/build/index.iife.js'
       script.onload = () => {
