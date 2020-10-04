@@ -7,6 +7,11 @@ export type Options = {
   color: string
   indicator: string
   radius: number
+  size: number
+  horizontalMargin: number
+  verticalMargin: number
+  horizontalPadding: number
+  verticalPadding: number
 }
 
 type Favicon = HTMLLinkElement
@@ -20,6 +25,11 @@ export const DefaultOptions: Options = {
   color: '#ffffff',
   indicator: '!',
   radius: 3,
+  size: 7,
+  horizontalMargin: 0,
+  verticalMargin: 0,
+  horizontalPadding: 1,
+  verticalPadding: 1,
 }
 
 // Get all favicons of the page
@@ -119,10 +129,9 @@ const getRatio = () => {
   return Math.ceil(window.devicePixelRatio) || 1
 }
 const handleRatioChange = () => {
-  console.log('handleRatioChange')
   set(current.value, current.options)
 }
-const getSize = () => {
+const getIconSize = () => {
   return 16 * getRatio()
 }
 
@@ -155,18 +164,18 @@ const drawFavicon = (
   value: Value,
   options: Options
 ) => {
-  const size = getSize()
+  const iconSize = getIconSize()
   const canvas = document.createElement('canvas')
-  canvas.width = size
-  canvas.height = size
+  canvas.width = iconSize
+  canvas.height = iconSize
   const context = canvas.getContext('2d')
   if (!context) {
     return
   }
 
   // Draw new image
-  image.width = size
-  image.height = size
+  image.width = iconSize
+  image.height = iconSize
   context.drawImage(image, 0, 0, image.width, image.height)
 
   // Draw bubble on the top
@@ -182,6 +191,9 @@ const drawBubble = (
   value: Value,
   options: Options
 ) => {
+  const ratio = getRatio()
+  const iconSize = getIconSize()
+
   // Do we need to render the bubble at all?
   let finalValue: string = ''
   if (isPositiveNumber(value)) {
@@ -201,24 +213,27 @@ const drawBubble = (
     return
   }
 
+  // Calculate text width initially
+  const textHeight = options.size - 2
+  const font = `${options.size * ratio}px Arial`
+  context.font = font
+  const { width: textWidth } = context.measureText(finalValue)
+  context.restore()
+
   // Calculate position etc.
-  const size = getSize()
-  const ratio = getRatio()
-  const length = finalValue.length - 1
-  const width = Math.min(8 * ratio + 4 * ratio * length, size)
-  const height = 7 * ratio
-  const top = size - height
-  const left = size - width
-  const bottom = 16 * ratio
-  const right = 16 * ratio
-  const radius = options.radius * ratio
+  const width = textWidth + 2 * options.horizontalPadding
+  const height = textHeight * ratio + 2 * options.verticalPadding
+  const top = iconSize - height - options.verticalMargin
+  const left = iconSize - width - options.horizontalMargin
+  const bottom = 16 * ratio - options.verticalMargin
+  const right = 16 * ratio - options.horizontalMargin
+  const radius = options.radius
 
   // Bubble
-  context.save()
   context.globalAlpha = 1
   context.fillStyle = options.backgroundColor
   context.strokeStyle = options.backgroundColor
-  context.lineWidth = ratio
+  context.lineWidth = 0
   context.beginPath()
   context.moveTo(left + radius, top)
   context.quadraticCurveTo(left, top, left, top + radius)
@@ -230,16 +245,25 @@ const drawBubble = (
   context.quadraticCurveTo(right, top, right - radius, top)
   context.closePath()
   context.fill()
-  context.restore()
+  context.save()
 
   // Value
-  context.save()
-  context.font = `${7 * ratio}px Arial`
+  context.font = font
   context.fillStyle = options.color
   context.textAlign = 'center'
-  context.textBaseline = 'top'
-  context.fillText(finalValue, left + width / 2, 9 * ratio + 1)
+  context.textBaseline = 'hanging'
+  context.fillText(finalValue, left + width / 2, top + options.verticalPadding)
+  context.save()
+
+  /*
+  // Helper line
   context.restore()
+  context.strokeStyle = '#ff0000'
+  context.moveTo(0, top + height / 2)
+  context.lineTo(iconSize, top + height / 2)
+  context.stroke()
+  context.save()
+  */
 }
 
 export function isAvailable() {
@@ -276,7 +300,7 @@ export function set(value: Value, options?: Partial<Options>) {
     }
 
     // Once the device pixel ratio changes we set the value again
-    devicePixelRatioListener.addListener(handleRatioChange)
+    devicePixelRatioListener.addEventListener('change', handleRatioChange)
   }
   if (!current.favicons) {
     current.favicons = getFavicons()
@@ -311,7 +335,7 @@ export function clear() {
   current.options = DefaultOptions
 
   // Remove old listener
-  devicePixelRatioListener.removeListener(handleRatioChange)
+  devicePixelRatioListener.removeEventListener('change', handleRatioChange)
 
   if (current.favicons) {
     // Remove current favicons
