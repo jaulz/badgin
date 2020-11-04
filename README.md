@@ -1,6 +1,6 @@
 # Badgin
 
-The [Badging API](https://web.dev/badging-api/) is a new web platform API that allows installed web apps to set an application-wide badge, shown in an operating-system-specific place associated with the application (such as the shelf or home screen). Starting in Chrome 73, the Badging API is available as an origin trial for Windows (7+) and macOS. If you want to know how origin trials work, please check the [documentation](https://web.dev/badging-api/#ot). Since this API is not available everywhere, `badgin` safely falls back to alternatives.
+The [Badging API](https://web.dev/badging-api/) is a new web platform API that allows installed web apps to set an application-wide badge, shown in an operating-system-specific place associated with the application (such as the shelf or home screen). The Badging API works on Windows, and macOS, in Chrome 81 or later. It has also been confirmed to work on Edge 84 or later. Support for Chrome OS is in development and will be available in a future release of Chrome. On Android, the Badging API is not supported. Instead, Android automatically shows a badge on app icon for the installed web app when there is an unread notification, just as for Android apps. Since this API is not available everywhere, `badgin` safely falls back to alternatives.
 
 ## via badge
 
@@ -52,12 +52,18 @@ The following options can be used:
 {
   method: 'Badging' | 'Favicon' | 'Title'
   favicon: {
-    backgroundColor: string
-    color: string
-    indicator: string
+    backgroundColor: string = '#424242'
+    color: string = '#ffffff'
+    indicator: string = '!'
+    radius: number = 3
+    size: number = 7
+    horizontalMargin: number = 0
+    verticalMargin: number = 0
+    horizontalPadding: number = 1
+    verticalPadding: number = 1
   }
   title: {
-    indicator: string
+    indicator: string = '!'
   }
 }
 ```
