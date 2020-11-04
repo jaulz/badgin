@@ -32,6 +32,8 @@ export const DefaultOptions: Options = {
   verticalPadding: 1,
 }
 
+const isFirefox = navigator.userAgent.indexOf('Firefox') > -1
+
 // Get all favicons of the page
 const getFavicons = (): Favicon[] => {
   const links = document.head.getElementsByTagName('link')
@@ -68,7 +70,13 @@ const getBestFavicon = (): BestFavicon => {
 
   for (let i = 0; i < favicons.length; i++) {
     const favicon = favicons[i]
+    const href = favicon.getAttribute('href')
     const sizes = favicon.getAttribute('sizes')
+
+    // If the href looks like it's an SVG, it's the best we can get
+    if (href?.endsWith('.svg')) {
+      return favicon
+    }
 
     // If the link does not have a "sizes" attribute, we use it only if we haven't found anything else yet
     if (!sizes) {
@@ -102,6 +110,7 @@ const getBestFavicon = (): BestFavicon => {
       continue
     }
   }
+  console.log(bestFavicon)
 
   return bestFavicon
 }
@@ -252,7 +261,11 @@ const drawBubble = (
   context.fillStyle = options.color
   context.textAlign = 'center'
   context.textBaseline = 'hanging'
-  context.fillText(finalValue, left + width / 2, top + options.verticalPadding)
+  context.fillText(
+    finalValue,
+    left + width / 2,
+    top + options.verticalPadding + (isFirefox ? 1 : 0)
+  )
   context.save()
 
   /*
@@ -318,7 +331,7 @@ export function set(value: Value, options?: Partial<Options>) {
   }
 
   // Otherwise we will wait for the load event
-  current.bestFaviconImage.addEventListener('load', function() {
+  current.bestFaviconImage.addEventListener('load', function () {
     drawFavicon(this, current.value, current.options)
   })
 
