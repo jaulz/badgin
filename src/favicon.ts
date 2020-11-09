@@ -110,7 +110,6 @@ const getBestFavicon = (): BestFavicon => {
       continue
     }
   }
-  console.log(bestFavicon)
 
   return bestFavicon
 }
