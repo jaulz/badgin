@@ -17,6 +17,10 @@
     "watch": "concurrently --kill-others \"live-server\" \"rollup -cw\"",
     "prepublishOnly": "yarn run ci",
     "ci": "yarn build"
+  }, 
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaulz/badgin",
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
